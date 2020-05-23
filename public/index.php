@@ -1,3 +1,8 @@
+<?php 
+$qid = isset($_GET['qid']) ? $_GET['qid'] : "0";
+$qid = str_replace('"', "", $qid);
+
+?>
 <!DOCTYPE html>
 <html lang="pt">
   <head>
@@ -11,7 +16,6 @@
     <noscript>
       <strong>Pedimos desculpas, mas o Mensuris não funciona sem JavaScript. Se puder habilitar ou atualizar seu navegador, poderá aproveitar com totalidade os recursos!</strong>
     </noscript>
-    <main id="app" data-qid="<?="laakakakjaj"//$_GET['qid']?>"></main>
-    
+    <main id="app" data-qid="0"></main>
   </body>
 </html>

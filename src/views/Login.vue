@@ -1,17 +1,37 @@
 <template>
-  <div class="home">
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div id="container-login" class="container">
+    <div class="wrapper flex flex-center flex-column">
+      <login v-if="form == 'login'" />
+      <codigo v-else />
+      <button class="btn" @click="mudar()">
+        Mudar para: {{ form == "login" ? "Código" : "Login" }}
+      </button>
+    </div>
   </div>
 </template>
 
-<script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+<script lang="ts">
+import Vue from "vue";
 
-export default {
-  name: "Home",
+import loginForm from "@/components/login/Login.vue";
+import codigoForm from "@/components/login/Codigo.vue";
+
+export default Vue.extend({
+  name: "Login",
+  props: ["estado"],
   components: {
-    HelloWorld
+    login: loginForm,
+    codigo: codigoForm
+  },
+  data() {
+    return {
+      form: "login" as string
+    };
+  },
+  methods: {
+    mudar() {
+      this.form = this.form == "login" ? "codigo" : "login";
+    }
   }
-};
+});
 </script>

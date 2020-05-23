@@ -1,66 +1,74 @@
 <template>
-  <main id="app" :class="[estado.tema === 0 ? 'tema-claro' : 'tema-escuro']">
-    <div id="carregamento" v-show="estado.carregamento">
+  <main
+    id="app"
+    :class="[estado.tema === 0 ? 'tema-claro' : 'tema-escuro']"
+    class="wh-100"
+  >
+    <div class="carregamento" v-show="estado.carregamento">
       <img src="../assets/loading.svg" alt="Carregando..." />
     </div>
-    <div id="nav">
-      <router-link to="/">Login</router-link>
-      <router-link to="/painel">Dashboard</router-link>
-      <router-link to="/questionario?id=47a">Questionário 47a</router-link>
-      <router-link to="/editar?id=47a">Editar Questionario</router-link>
+    <div
+      :class="['navbar', 'vertical-navbar', navbarRetraida ? 'retraida' : '']"
+    >
+      <a @click="retrairNavbar()">
+        <icon
+          icon="angle-double-left"
+          :transform="{ rotate: navbarRetraida ? 180 : 0 }"
+        />
+      </a>
+      <a @click="mudarTema()">
+        <icon v-if="estado.tema == 0" icon="sun" />
+        <icon v-else icon="moon" />
+        <span>&nbsp; Modo {{ estado.tema == 0 ? "Claro" : "Noturno" }}</span>
+      </a>
+      <router-link to="/">
+        <icon icon="user" />
+        <span>&nbsp;Login</span>
+      </router-link>
+      <router-link v-if="estado.sessao.id" to="/painel">
+        <icon icon="th" />
+        <span>&nbsp;Dashboard</span>
+      </router-link>
+      <router-link v-if="estado.sessao.id" to="/questionario?id=47a">
+        <icon icon="th" />
+        <span>&nbsp;Questionário 47a</span>
+      </router-link>
+      <router-link v-if="estado.sessao.id" to="/informacoes?id=47a">
+        <icon icon="info-circle" />
+        <span>&nbsp;Informações Questionario</span>
+      </router-link>
+      <a v-if="true /*$route.name == 'Dashboard'*/">
+        <icon icon="edit" />
+        <span>&nbsp;Estou em: {{ $route.name }}</span>
+      </a>
     </div>
     <router-view :estado="estado" />
+    <vue-snotify />
   </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
 export default Vue.extend({
-  props: ["estado"]
+  props: ["estado"],
+  data() {
+    return {
+      navbarRetraida: localStorage.getItem("navbar")
+    };
+  },
+  methods: {
+    mudarTema() {
+      this.estado.tema = this.estado.tema == 1 ? 0 : 1; //Switch ternário
+      localStorage.setItem("tema", this.estado.tema.toString());
+    },
+    retrairNavbar() {
+      this.navbarRetraida = this.navbarRetraida ? false : true;
+      localStorage.setItem("navbar", this.navbarRetraida.toString());
+    }
+  }
 });
 </script>
 
 <style lang="scss">
-@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap");
-:root {
-  --base: #fca311;
-  --azul: #14213d;
-}
-.tema-claro {
-  --background: #e7e7e7;
-  --texto: #313131;
-}
-.tema-escuro {
-  --background: #313131;
-  --texto: #e7e7e7;
-}
-html,
-body {
-  margin: 0;
-  padding: 0;
-  scrollbar-width: thin;
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-}
-#carregamento {
-  background: var(--background);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  img {
-    position: relative;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 80px;
-  }
-}
-#app {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  font-family: "Roboto", sans-serif;
-}
+@import "@/App.scss";
 </style>

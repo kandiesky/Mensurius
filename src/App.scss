@@ -1,0 +1,351 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,700;1,400&display=swap");
+@import '@/style_components/_mods.scss';
+
+:root {
+    font-family: "Roboto", sans-serif;
+}
+
+.tema-claro {
+    --background: #cfdbd5;
+    --texto: #333533;
+    --texto-alt: #242423;
+    --base: #805b10;
+    --complementar: #fad643;
+    --icon: #a47e1b;
+}
+
+.tema-escuro {
+    --background: #313131;
+    --texto: #e7e7e7;
+    --texto-alt: #ffffff;
+    --base: #6fffe9;
+    --complementar: #1c2541;
+    --icon: #0353a4;
+}
+
+%transicao {
+    transition: background 0.4s ease-in-out, color 0.3s ease, width 0.3s ease;
+}
+
+.wh-100 {
+    width: 100%;
+    height: 100%;
+}
+
+.box-sizing {
+    box-sizing: border-box;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    scrollbar-width: thin;
+    overflow: hidden;
+
+    &::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    @extend .wh-100;
+}
+
+.carregamento {
+    background: var(--background);
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    left: 0;
+
+    img {
+        height: 80px;
+    }
+}
+
+#app {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    display: flex;
+    background: var(--background);
+    color: var(--texto);
+    @extend .box-sizing;
+    @extend %transicao;
+}
+
+.navbar {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0.3rem;
+    background-color: var(--complementar);
+    @extend %transicao;
+
+    a {
+        display: inline-block;
+        border-bottom: 2px solid var(--icon);
+        margin-bottom: .5rem;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        margin-right: 0.5rem;
+        text-decoration: 0;
+        color: var(--base);
+
+        svg {
+            color: var(--icon)
+        }
+    }
+
+    .router-link-exact-active {
+        color: var(--complementar);
+        background: var(--base);
+    }
+}
+
+.vertical-navbar {
+    width: 250px;
+    height: 100%;
+    z-index: 2;
+
+    a {
+        display: block;
+    }
+
+    &.retraida {
+        width: 43px;
+
+        a {
+            margin-right: 0;
+            text-align: center;
+
+            span {
+                display: none;
+            }
+        }
+    }
+}
+
+#container-login {
+    background-image: url("../assets/login_background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.container {
+    box-sizing: border-box;
+    text-align: center;
+    padding: .7rem;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+.wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.flex-column {
+    flex-flow: column;
+}
+
+.flex-center {
+    justify-content: center;
+    align-items: center;
+}
+
+.flex {
+    display: flex;
+
+}
+
+.card {
+    box-sizing: border-box;
+    position: relative;
+    display: inline-flex;
+    margin: .5rem;
+    padding: 1rem;
+    width: 100%;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 400px;
+    word-wrap: break-word;
+    background-color: var(--complementar);
+    box-shadow: 1.5px 2px var(--base);
+    margin-bottom: .5rem;
+    background-clip: border-box;
+    border: 1px solid rgba(0, 0, 0, .125);
+    border-radius: .25rem;
+    text-align: center;
+
+    img {
+        display: inline-block;
+        width: 150px;
+        height: 150px;
+        margin: .3rem 0;
+    }
+
+    @extend %transicao;
+}
+
+.card-form {
+    input {
+        border: 2px solid var(--base);
+        background: var(--background);
+        color: var(--texto-alt);
+        padding: .75rem;
+        margin: .3rem 0;
+        border-radius: .3rem;
+        box-sizing: border-box;
+    }
+}
+
+.card-form-group {
+    position: relative;
+    padding: .5rem 0;
+
+    label,
+    button {
+        color: var(--texto);
+        position: absolute;
+        top: 50%;
+    }
+
+    button {
+        background: 0;
+        right: 0;
+        transform: translate(0, -50%);
+
+        svg {
+            vertical-align: 0;
+        }
+    }
+
+    label {
+        cursor: text;
+        user-select: none;
+        text-align: center;
+        width: 100%;
+        border-radius: .1rem;
+        left: 0;
+        transform: translate(0, -50%);
+        transition: transform .2s ease, top .2s ease;
+        transform-origin: bottom;
+    }
+
+    input:focus~label,
+    .preenchido {
+        transform: unset;
+        top: -9%;
+    }
+
+    input {
+        width: 100%;
+    }
+}
+
+.dropdown {
+    box-sizing: border-box;
+    opacity: .2;
+    margin: 0;
+    max-height: 0;
+    padding: 0;
+    overflow: hidden;
+    width: 100%;
+    max-width: 180px;
+    list-style: none;
+    background: var(--base);
+    transition: max-height .4s ease, opacity .3s ease;
+    border-radius: .3rem;
+    border-top-right-radius: .1rem;
+    position: absolute;
+    right: 1rem;
+    top: 2rem;
+
+    li {
+        cursor: pointer;
+        border-radius: .125rem;
+        border-bottom: 2px solid var(--complementar);
+        color: var(--complementar);
+        padding: .250rem;
+        margin: .5rem;
+        text-align: left;
+        svg{
+            display: inline-block;
+            margin-right: .5rem;
+        }
+        &:last-of-type {
+            border: 0;
+        }
+    }
+
+}
+
+.dropdown-aberto {
+    max-height: 200px;
+    opacity: 1;
+}
+
+.dropdown-menu {
+    cursor: pointer;
+    position: absolute;
+    right: 1rem;
+    top: 1rem;
+}
+
+.container-questionario {
+    justify-content: space-evenly;
+}
+
+.votos-questionario {
+    margin: 0 .5rem;
+    text-align: center;
+}
+
+.progresso {
+    display: inline-block;
+    box-sizing: border-box;
+    position: relative;
+    height: 50px;
+    width: 25px;
+    border: 1px solid var(--base);
+    margin-top: .2rem;
+
+    .preenchimento-progresso {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--base);
+    }
+}
+
+button {
+    display: inline-block;
+    cursor: pointer;
+    word-wrap: break-word;
+    color: var(--complementar);
+    background: var(--base);
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    padding: .375rem .75rem;
+    margin: .125rem;
+    font-size: 1rem;
+    line-height: 1.5;
+    border: 2px solid transparent;
+    border-radius: .25rem;
+    @extend .box-sizing;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    margin-block-end: .4rem;
+    margin-block-start: .4rem;
+}

@@ -1,6 +1,6 @@
 module.exports = {
   runtimeCompiler: true,
-  publicPath: "./public",
+  publicPath: "/public/",
   outputDir: "../public",
   indexPath: "index.php",
   productionSourceMap: false,
