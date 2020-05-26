@@ -1,4 +1,5 @@
 <template>
+  <!-- Não vai ser utilizado. Edições quebram princípio de confiança -->
   <div class="wrapper modal">
     <div class="modal-body">
       <form @submit.prevent class="card-form">

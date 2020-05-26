@@ -20,7 +20,8 @@ import {
   faInfoCircle,
   faEye,
   faEyeSlash,
-  faPlusCircle
+  faPlusCircle,
+  faCaretLeft
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -39,7 +40,8 @@ library.add(
   faInfoCircle,
   faEye,
   faEyeSlash,
-  faPlusCircle
+  faPlusCircle,
+  faCaretLeft
 );
 
 Vue.component("icon", FontAwesomeIcon);
@@ -68,6 +70,7 @@ const mainEl = document.getElementById("app") as Element,
     (0 as number); //Aqui não tem problema o localStorage ser 0 ou null, porque defaulta pra 0.
 
 Vue.config.productionTip = false;
+Vue.config.performance = true;
 
 new Vue({
   el: mainEl,

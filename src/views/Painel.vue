@@ -1,14 +1,17 @@
 <template>
   <div class="container">
+    <paginacao :paginas="paginas" v-if="paginas.total > 1" />
     <questionarios
       :questionarios="questionarios"
       :estadoModais="estadoModais"
+      :paginas="paginas"
     />
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue";
 import Questionarios from "@/components/painel/Questionarios.vue";
+import Paginacao from "@/components/painel/Paginacao.vue";
 
 export default Vue.extend({
   name: "Painel",
@@ -20,14 +23,48 @@ export default Vue.extend({
       estadoModais: {
         editar: { aberto: false, editando: 0 },
         informacoes: { aberto: false, exibindo: 0 }
+      },
+      paginas: {
+        total: 3, // -1 faz o texto de adicionar questionário ser ativado
+        atual: 1 //Começa no 1
       }
     };
   },
   components: {
-    questionarios: Questionarios
+    questionarios: Questionarios,
+    paginacao: Paginacao
   },
-  methods: {},
+  methods: {
+    mudarPagina() {
+      this.questionarios = {};
+      /* this.$http
+        .get("api/questionarios.php", {
+          params: {
+            id: this.$root.estado.sessao.id,
+            chave: this.$root.estado.sessao.chave,
+            offset: this.paginas.atual
+          }
+        })
+        .then(response => {
+          if (!response.data.resultado) {
+            this.$snotify.error(
+              `Não foi possível carregar os questionários! Motivo: ${response.data.mensagem}`
+            );
+            return false;
+          }
+          this.questionarios = response.data.resposta;
+        })
+        .catch(reason => {
+          this.$snotify.error(
+            `Não foi possível se conectar com o servidor: ${reason}`
+          );
+        }); */
+    }
+  },
   mounted() {
+    /* if(this.$root.estado.sessao.id == 0){
+      this.$router.push("/");
+    } */
     this.$nextTick(() => {
       this.questionarios = {
         "478as": {
@@ -81,7 +118,7 @@ export default Vue.extend({
           params: {
             id: this.$root.estado.sessao.id,
             chave: this.$root.estado.sessao.chave,
-            quantidade: this.quantidade
+            offset: 1
           }
         })
         .then(response => {
@@ -99,6 +136,13 @@ export default Vue.extend({
           );
         }); */
     });
+    this.$watch(
+      "paginas",
+      function() {
+        this.mudarPagina();
+      },
+      { deep: true }
+    );
   }
 });
 </script>

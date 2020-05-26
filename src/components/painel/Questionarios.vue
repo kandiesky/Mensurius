@@ -4,29 +4,15 @@
       class="card flex-center"
       v-for="(questionario, index) in questionarios"
       :key="index"
-      @click="switchMenu(questionario.codigo, false)"
     >
       <h2>{{ questionario.nome }}</h2>
       <small>Votos: {{ questionario.quantidadeRespostas }}</small>
       <small>Prazo de Vencimento: {{ questionario.validade }}</small>
       <div :id="`menu-${questionario.codigo}`">
-        <icon
-          icon="ellipsis-v"
-          class="dropdown-menu"
-          @click.stop="switchMenu(questionario.codigo, true)"
-        />
-        <ul
-          :class="[
-            'dropdown',
-            { 'dropdown-aberto': menuAberto[questionario.codigo] }
-          ]"
-          :ref="`dropdown`"
-          :key="menuAberto[questionario.codigo]"
-        >
-          <li @click="editar(questionario.codigo)">
-            <icon icon="edit" />
-            <span>Editar</span>
-          </li>
+        <button class="dropdown-menu">
+          <icon icon="ellipsis-v" />
+        </button>
+        <ul class="dropdown">
           <li>
             <icon icon="info-circle" />
             <span>Informações</span>
@@ -75,9 +61,13 @@
       </div>
     </div>
   </div>
-  <div class="carregamento" v-else>
+  <div class="carregamento" v-else-if="paginas.total >= 0">
     <icon icon="circle-notch" spin size="6x" />
   </div>
+  <span v-else-if="paginas.total == -1"
+    >Você ainda não tem um questionário. Que tal
+    <button type="button">criar um?</button></span
+  >
 </template>
 
 <script lang="ts">
@@ -85,25 +75,14 @@ import Vue from "vue";
 import size from "lodash/size";
 
 export default Vue.extend({
-  props: ["questionarios", "estadoModais"],
+  props: ["questionarios", "estadoModais", "paginas"],
   methods: {
-    switchMenu(index: string) {
-      this.menuAberto[index] = this.menuAberto[index] ? false : true;
-    },
     tamanho(objeto = {} || []) {
       return size(objeto);
-    },
-    editar(index: string) {
-      console.log(index);
     },
     deletar(index: string) {
       this.$delete(this.questionarios, index);
     }
-  },
-  data() {
-    return {
-      menuAberto: {} //Será preenchido conforme a entrada de novos itens
-    };
   }
 });
 </script>

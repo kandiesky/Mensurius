@@ -284,16 +284,18 @@ body {
 
 }
 
-.dropdown-aberto {
-    max-height: 200px;
-    opacity: 1;
-}
-
 .dropdown-menu {
     cursor: pointer;
     position: absolute;
-    right: 1rem;
-    top: 1rem;
+    margin: 0;
+    right: 0;
+    top: 0;
+    color: var(--texto);
+    background: unset;
+    &:focus ~ .dropdown{
+        max-height: 200px;
+        opacity: 1;
+    }
 }
 
 .container-questionario {
@@ -323,6 +325,14 @@ body {
     }
 }
 
+.paginacao{
+    display: flex;
+    justify-content: center;
+    button{
+        margin: 0 .3rem;
+        line-height: 1;
+    }
+}
 button {
     display: inline-block;
     cursor: pointer;
@@ -335,10 +345,13 @@ button {
     padding: .375rem .75rem;
     margin: .125rem;
     font-size: 1rem;
-    line-height: 1.5;
     border: 2px solid transparent;
     border-radius: .25rem;
     @extend .box-sizing;
+
+    &[disabled]{
+        opacity: .6;
+    }
 }
 
 h1,
