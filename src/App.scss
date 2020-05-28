@@ -6,7 +6,7 @@
 }
 
 .tema-claro {
-    --background: #cfdbd5;
+    --background: #d4d4d3;
     --texto: #333533;
     --texto-alt: #242423;
     --base: #805b10;
@@ -83,6 +83,11 @@ body {
     background-color: var(--complementar);
     @extend %transicao;
 
+    .sub {
+        margin-left: 1rem;
+        border-bottom: 0;
+    }
+
     a {
         display: inline-block;
         border-bottom: 2px solid var(--icon);
@@ -117,6 +122,10 @@ body {
     &.retraida {
         width: 43px;
 
+        .sub {
+            display: none;
+        }
+
         a {
             margin-right: 0;
             text-align: center;
@@ -141,6 +150,10 @@ body {
     width: 100%;
     height: 100%;
     overflow: auto;
+}
+
+.mt-2 {
+    margin-top: 2rem;
 }
 
 .wrapper {
@@ -181,14 +194,45 @@ body {
     border-radius: .25rem;
     text-align: center;
 
-    img {
+    table {
+        width: 100%;
+
+        th,
+        td {
+            box-sizing: border-box;
+            width: 50%;
+        }
+
+        th {
+            border: 3px solid var(--texto);
+            font-size: 1.2rem;
+        }
+
+        td {
+            padding: 0;
+            border-top: 1px solid var(--base);
+            border-bottom: 1px solid var(--base);
+            border-right: 2px solid var(--icon);
+            border-left: 2px solid var(--icon);
+        }
+    }
+
+    .qr {
         display: inline-block;
         width: 150px;
         height: 150px;
         margin: .3rem 0;
     }
 
+    .midia {
+        width: 100%;
+    }
+
     @extend %transicao;
+}
+
+.card-lg {
+    max-width: 800px;
 }
 
 .card-form {
@@ -246,7 +290,29 @@ body {
         width: 100%;
     }
 }
-
+.card-respostas{
+    input:checked ~ label{
+        background: var(--icon);
+        color: var(--texto);
+    }
+    label{
+        display: inline-block;
+        cursor: pointer;
+        border: 2px solid var(--base);
+        background: var(--background);
+        color: var(--texto-alt);
+        padding: 1rem;
+        margin: .3rem 0;
+        border-radius: .3rem;
+        box-sizing: border-box;
+        width: 100%;
+    }
+    input{
+        position: absolute;
+        opacity: 0;
+        display: none;
+    }
+}
 .dropdown {
     box-sizing: border-box;
     opacity: .2;
@@ -273,10 +339,12 @@ body {
         padding: .250rem;
         margin: .5rem;
         text-align: left;
-        svg{
+
+        svg {
             display: inline-block;
             margin-right: .5rem;
         }
+
         &:last-of-type {
             border: 0;
         }
@@ -284,18 +352,28 @@ body {
 
 }
 
-.dropdown-menu {
+%menus {
     cursor: pointer;
     position: absolute;
     margin: 0;
-    right: 0;
     top: 0;
     color: var(--texto);
     background: unset;
-    &:focus ~ .dropdown{
+}
+
+.dropdown-menu {
+    right: 0;
+    @extend %menus;
+
+    &:focus~.dropdown {
         max-height: 200px;
         opacity: 1;
     }
+}
+
+.arrow-menu {
+    left: 0;
+    @extend %menus;
 }
 
 .container-questionario {
@@ -325,14 +403,16 @@ body {
     }
 }
 
-.paginacao{
+.paginacao {
     display: flex;
     justify-content: center;
-    button{
+
+    button {
         margin: 0 .3rem;
         line-height: 1;
     }
 }
+
 button {
     display: inline-block;
     cursor: pointer;
@@ -349,9 +429,12 @@ button {
     border-radius: .25rem;
     @extend .box-sizing;
 
-    &[disabled]{
+    &[disabled] {
         opacity: .6;
     }
+}
+.btn-lg{
+    padding: .725rem .265rem;
 }
 
 h1,

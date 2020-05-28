@@ -12,7 +12,10 @@
         >OPCIONAL: SEU NOME</label
       >
     </div>
-    <button type="submit">Ir Para Respostas</button>
+    <button type="submit">RESPONDER</button>
+    <router-link tag="button" :to="{ path: 'login' }" class="mt-2"
+      >QUERO ACESSAR MINHA CONTA</router-link
+    >
   </form>
 </template>
 
@@ -20,6 +23,7 @@
 import Vue from "vue";
 
 export default Vue.extend({
+  props: ["estado"],
   methods: {
     checarCodigo() {
       if (!this.codigo) {
@@ -29,7 +33,7 @@ export default Vue.extend({
       this.$http
         .post("api/questionario.php", {
           params: {
-            id: this.$root.estado.sessao.id,
+            id: this.estado.sessao.id,
             codigo: this.codigo,
             nome: this.nome,
             operacao: "checar"
@@ -37,7 +41,7 @@ export default Vue.extend({
         })
         .then(response => {
           if (response.data.resultado == true) {
-            if (this.nome != "") this.$root.estado.sessao.nome = this.nome;
+            if (this.nome != "") this.estado.sessao.nome = this.nome;
             this.$router.push(`/questionario?id=${this.codigo}`);
           }
         })

@@ -20,13 +20,20 @@
       </button>
     </div>
     <button type="submit">ENTRAR</button>
+    <br />
+    <router-link tag="button" :to="{ path: 'registrar' }" class="mt-2"
+      >QUERO CRIAR MINHA CONTA</router-link
+    >
+    <br />
+    <router-link tag="button" :to="{ path: '/' }" class="mt-2"
+      >QUERO DIGITAR UM CÓDIGO</router-link
+    >
   </form>
 </template>
 
-<script lang="ts">
-import Vue from "vue";
-
-export default Vue.extend({
+<script>
+export default {
+  props: ["estado"],
   methods: {
     mostrarSenha() {
       this.mostrandoSenha = this.mostrandoSenha ? false : true;
@@ -36,8 +43,10 @@ export default Vue.extend({
         this.$snotify.warning("Usuário ou Senha inválidos!");
         return false;
       }
-      this.$root.estado.sessao.id = 1;
-      if (this.$root) return true;
+      this.estado.sessao.id = 1;
+      this.$router.push("/painel");
+
+      if (this) return true;
 
       this.$http
         .post("api/login.php", {
@@ -51,11 +60,7 @@ export default Vue.extend({
             this.$snotify.success(
               "Login realizado com sucesso! Redirecionando para a sua dashboard."
             );
-            this.$root.estado.sessao = {
-              nome: response.data.resposta.sessao.nome,
-              id: response.data.resposta.sessao.id,
-              chave: response.data.resposta.sessao.chave
-            };
+            this.estado.sessao = response.data.resposta.sessao;
             this.$router.push("/painel");
           }
         })
@@ -68,10 +73,10 @@ export default Vue.extend({
   },
   data() {
     return {
-      login: "" as string,
-      senha: "" as string,
-      mostrandoSenha: false as boolean
+      login: "",
+      senha: "",
+      mostrandoSenha: false
     };
   }
-});
+};
 </script>

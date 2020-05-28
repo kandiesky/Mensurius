@@ -21,13 +21,20 @@ import {
   faEye,
   faEyeSlash,
   faPlusCircle,
-  faCaretLeft
+  faCaretLeft,
+  faArrowAltCircleLeft,
+  faHome,
+  faPlusSquare,
+  faSignOutAlt
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
 library.add(
   faMoon,
   faSun,
+  faHome,
+  faSignOutAlt,
+  faPlusSquare,
   faEllipsisV,
   faEdit,
   faInfo,
@@ -41,7 +48,8 @@ library.add(
   faEye,
   faEyeSlash,
   faPlusCircle,
-  faCaretLeft
+  faCaretLeft,
+  faArrowAltCircleLeft
 );
 
 Vue.component("icon", FontAwesomeIcon);
@@ -64,10 +72,7 @@ import vueQr from "vue-qr";
 Vue.component("qr", vueQr);
 
 const mainEl = document.getElementById("app") as Element,
-  qid = mainEl.getAttribute("data-qid")?.toString() as string, //Id do questionário, alfanumérico
-  tema =
-    (parseInt(localStorage.getItem("tema") as string) as number) ||
-    (0 as number); //Aqui não tem problema o localStorage ser 0 ou null, porque defaulta pra 0.
+  qid = mainEl.getAttribute("data-qid")?.toString() as string; //Id do questionário, alfanumérico
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
@@ -82,7 +87,6 @@ new Vue({
   data: {
     estado: {
       carregamento: true as boolean, //Se está carregnado. Importante pois define a visibilidade do preloader.
-      tema: tema as number, //Int 0 ou 1, de acordo com o tema. 0 é pro tema claro e 1 para tema escuro. Padrão é 0
       sessao: {
         nome: "" as string, //Nome do usuário que está na sessão. Mais utilizado para visitantes
         id: 0 as number, //ID do usuário da sessão. É batido junto com a Chave para verificar se o login é legítimo

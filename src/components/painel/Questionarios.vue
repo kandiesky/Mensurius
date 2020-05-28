@@ -1,5 +1,6 @@
 <template>
   <div class="wrapper" v-if="tamanho(questionarios) > 0">
+    <paginacao :paginas="paginas" v-if="paginas.total > 1" />
     <div
       class="card flex-center"
       v-for="(questionario, index) in questionarios"
@@ -7,16 +8,23 @@
     >
       <h2>{{ questionario.nome }}</h2>
       <small>Votos: {{ questionario.quantidadeRespostas }}</small>
+      <br />
       <small>Prazo de Vencimento: {{ questionario.validade }}</small>
       <div :id="`menu-${questionario.codigo}`">
         <button class="dropdown-menu">
           <icon icon="ellipsis-v" />
         </button>
         <ul class="dropdown">
-          <li>
+          <router-link
+            tag="li"
+            :to="{
+              path: 'painel/informacoes',
+              query: { qid: questionario.codigo }
+            }"
+          >
             <icon icon="info-circle" />
             <span>Informações</span>
-          </li>
+          </router-link>
           <li>
             <icon icon="calendar-check" />
             <span>Fechar Prazo</span>
@@ -27,7 +35,10 @@
           </li>
         </ul>
       </div>
-      <qr :text="questionario.codigo" :size="150" />
+      <qr :text="questionario.codigo" :size="150" class="qr" />
+      <div v-if="questionario.midia.length > 0" class="wrapper">
+        <img :src="questionario.midia.length" class="midia" />
+      </div>
       <h3>{{ questionario.pergunta }}</h3>
       <div class="flex container container-questionario">
         <div
@@ -64,25 +75,62 @@
   <div class="carregamento" v-else-if="paginas.total >= 0">
     <icon icon="circle-notch" spin size="6x" />
   </div>
-  <span v-else-if="paginas.total == -1"
-    >Você ainda não tem um questionário. Que tal
-    <button type="button">criar um?</button></span
-  >
+  <span v-else-if="paginas.total == -1">
+    Você ainda não tem um questionário. Que tal
+    <button type="button">criar um?</button>
+  </span>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { SnotifyToast } from "vue-snotify";
 import size from "lodash/size";
+import Paginacao from "@/components/painel/Paginacao.vue";
 
 export default Vue.extend({
-  props: ["questionarios", "estadoModais", "paginas"],
+  props: ["questionarios", "paginas"],
   methods: {
     tamanho(objeto = {} || []) {
       return size(objeto);
     },
     deletar(index: string) {
-      this.$delete(this.questionarios, index);
+      this.$snotify.prompt(
+        "DELETAR QUESTIONÁRIO",
+        'VOCÊ TEM CERTEZA QUE DESEJA DELETAR ESTE QUESTIONÁRIO? ESTE PROCESSO NÃO TEM VOLTA. DIGITE "SIM" NA CAIXA ABAIXO E CLIQUE EM CONFIRMAR CASO DESEJE.',
+        {
+          buttons: [
+            {
+              text: "CONFIRMAR",
+              action: (toast: SnotifyToast) => {
+                const resposta = toast.value;
+                if (resposta.toLowerCase() === "sim") {
+                  this.$delete(this.questionarios, index);
+                  this.$snotify.remove(toast.id);
+                  this.$snotify.success("DELETADO COM SUCESSO!");
+                  this.$root.recarregar();
+                } else {
+                  this.$snotify.error(
+                    `A AÇÃO FOI CANCELADA. A RESPOSTA "${resposta}" ESTAVA INCORRETA`
+                  );
+                  this.$snotify.remove(toast.id);
+                }
+              },
+              bold: true
+            },
+            {
+              text: "CANCELAR",
+              action: (toast: SnotifyToast) => {
+                this.$snotify.remove(toast.id);
+              }
+            }
+          ],
+          placeholder: 'DIGITE "SIM" E CONFIRME PARA PROSSEGUIR'
+        }
+      );
     }
+  },
+  components: {
+    paginacao: Paginacao
   }
 });
 </script>

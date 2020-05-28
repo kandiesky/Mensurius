@@ -1,7 +1,7 @@
 <template>
   <main
     id="app"
-    :class="[estado.tema === 0 ? 'tema-claro' : 'tema-escuro']"
+    :class="[tema === 0 ? 'tema-claro' : 'tema-escuro']"
     class="wh-100"
   >
     <div class="carregamento" v-show="estado.carregamento">
@@ -17,11 +17,15 @@
         />
       </a>
       <a @click="mudarTema()">
-        <icon v-if="estado.tema == 0" icon="sun" />
+        <icon v-if="tema == 0" icon="sun" />
         <icon v-else icon="moon" />
-        <span>&nbsp; Modo {{ estado.tema == 0 ? "Claro" : "Noturno" }}</span>
+        <span>&nbsp; Modo {{ tema == 0 ? "Claro" : "Noturno" }}</span>
       </a>
-      <router-link to="/">
+      <router-link to="/" v-if="!estado.sessao.id">
+        <icon icon="home" />
+        <span>&nbsp;Início</span>
+      </router-link>
+      <router-link to="login" class="sub" v-if="!estado.sessao.id">
         <icon icon="user" />
         <span>&nbsp;Login</span>
       </router-link>
@@ -29,17 +33,13 @@
         <icon icon="th" />
         <span>&nbsp;Dashboard</span>
       </router-link>
-      <router-link v-if="estado.sessao.id" to="/questionario?id=47a">
-        <icon icon="th" />
-        <span>&nbsp;Questionário 47a</span>
+      <router-link v-if="estado.sessao.id" to="/painel/criar" class="sub">
+        <icon icon="plus-square" />
+        <span>&nbsp;Criar Questionário</span>
       </router-link>
-      <router-link v-if="estado.sessao.id" to="/informacoes?id=47a">
-        <icon icon="info-circle" />
-        <span>&nbsp;Informações Questionario</span>
-      </router-link>
-      <a v-if="true /*$route.name == 'Dashboard'*/">
-        <icon icon="edit" />
-        <span>&nbsp;Estou em: {{ $route.name }}</span>
+      <a v-if="estado.sessao.id" @click="sair()">
+        <icon icon="sign-out-alt" />
+        <span>&nbsp;Sair</span>
       </a>
     </div>
     <router-view :estado="estado" />
@@ -53,17 +53,36 @@ export default Vue.extend({
   props: ["estado"],
   data() {
     return {
-      navbarRetraida: localStorage.getItem("navbar")
+      navbarRetraida: parseInt(
+        localStorage.getItem("navbar") as string
+      ) as number,
+      tema: parseInt(localStorage.getItem("tema") as string) as number
     };
   },
   methods: {
     mudarTema() {
-      this.estado.tema = this.estado.tema == 1 ? 0 : 1; //Switch ternário
-      localStorage.setItem("tema", this.estado.tema.toString());
+      this.tema = this.tema == 1 ? 0 : 1; //Switch ternário
+      localStorage.setItem("tema", `${this.tema}`);
     },
     retrairNavbar() {
-      this.navbarRetraida = this.navbarRetraida ? false : true;
-      localStorage.setItem("navbar", this.navbarRetraida.toString());
+      this.navbarRetraida = this.navbarRetraida ? 0 : 1;
+      localStorage.setItem("navbar", `${this.navbarRetraida}`);
+    },
+    sair() {
+      this.estado.sessao = {
+        nome: "",
+        id: "",
+        chave: ""
+      };
+      this.$router.push("/");
+    }
+  },
+  mounted() {
+    if (localStorage.getItem("navbar") === null) {
+      localStorage.setItem("navbar", "0");
+    }
+    if (localStorage.getItem("tema") === null) {
+      localStorage.setItem("tema", "1");
     }
   }
 });
