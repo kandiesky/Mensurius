@@ -1,6 +1,6 @@
 module.exports = {
   runtimeCompiler: true,
-  publicPath: "mensuris/mensurius/",
+  publicPath: "/mensuris/mensurius/",
   outputDir: "../mensurius",
   indexPath: "index.php",
   productionSourceMap: false,
