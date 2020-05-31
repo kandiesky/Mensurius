@@ -83,13 +83,24 @@ export default Vue.extend({
           { timeout: 8000 }
         );
       }
-
       const midia = new FileReader();
+      const input = this.$refs.midia as HTMLInputElement;
 
-      midia.readAsDataURL(this.$refs.midia.files[0]);
+      //Eu odeio typescript
+      if (!input.files) input.files = new FileList();
 
+      midia.readAsDataURL(input.files[0]);
       midia.onload = () => {
-        this.midia = midia.result;
+        if (
+          midia.result &&
+          midia.result.toString().search(/data:image/i) === -1
+        ) {
+          this.$snotify.error("O arquivo não é uma imagem!", "ERRO", {
+            timeout: 8000
+          });
+          return;
+        }
+        this.midia = midia.result as string;
       };
     },
     adicionarResposta() {
@@ -97,6 +108,10 @@ export default Vue.extend({
     },
     removerResposta(index: number) {
       this.$delete(this.respostas, index);
+    },
+    criar() {
+      /* this.$http.post(); */
+      console.log(this);
     }
   }
 });

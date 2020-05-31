@@ -21,10 +21,6 @@
     </div>
     <button type="submit">ENTRAR</button>
     <br />
-    <router-link tag="button" :to="{ path: 'registrar' }" class="mt-2"
-      >QUERO CRIAR MINHA CONTA</router-link
-    >
-    <br />
     <router-link tag="button" :to="{ path: '/' }" class="mt-2"
       >QUERO DIGITAR UM CÓDIGO</router-link
     >

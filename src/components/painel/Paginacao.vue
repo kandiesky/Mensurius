@@ -27,7 +27,7 @@ import { SnotifyToast } from "vue-snotify";
 export default Vue.extend({
   props: ["paginas"],
   methods: {
-    trocar(direcao: string, numero?: number) {
+    trocar(direcao: string) {
       if (direcao == "ir") {
         this.paginas.atual++;
       } else if (direcao == "voltar") {
@@ -47,7 +47,7 @@ export default Vue.extend({
                   const numeroPagina = parseInt(toast.value);
                   if (numeroPagina > 0 && numeroPagina <= this.paginas.total) {
                     this.paginas.atual = numeroPagina;
-                    this.$snotify.remove(toast.id);
+                    this.$snotify.remove(toast.id as string);
                   } else {
                     this.$snotify.error("Página inválida!");
                   }
@@ -57,7 +57,7 @@ export default Vue.extend({
               {
                 text: "Cancelar",
                 action: (toast: SnotifyToast) => {
-                  this.$snotify.remove(toast.id);
+                  this.$snotify.remove(toast.id as string);
                 }
               }
             ],

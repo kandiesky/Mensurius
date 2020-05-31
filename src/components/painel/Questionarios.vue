@@ -25,17 +25,29 @@
             <icon icon="info-circle" />
             <span>Informações</span>
           </router-link>
-          <li>
+          <!-- <li>
             <icon icon="calendar-check" />
             <span>Fechar Prazo</span>
-          </li>
+          </li>-->
           <li @click="deletar(questionario.codigo)">
             <icon icon="trash-alt" />
             <span>Deletar</span>
           </li>
         </ul>
       </div>
-      <qr :text="questionario.codigo" :size="150" class="qr" />
+      <qr
+        :text="questionario.codigo"
+        :size="150"
+        class="qr"
+        @click="baixarQr(index)"
+        :ref="index"
+      />
+      <div class="wrapper">
+        <button @click="copiarLink(index)" :ref="`cl-${index}`">
+          Copiar Link
+        </button>
+        <button @click="baixarQr(index)">Baixar QR</button>
+      </div>
       <div v-if="questionario.midia.length > 0" class="wrapper">
         <img :src="questionario.midia.length" class="midia" />
       </div>
@@ -89,9 +101,35 @@ import Paginacao from "@/components/painel/Paginacao.vue";
 
 export default Vue.extend({
   props: ["questionarios", "paginas"],
+  data() {
+    return {
+      dataQr: []
+    };
+  },
   methods: {
     tamanho(objeto = {} || []) {
       return size(objeto);
+    },
+    baixarQr(index: string) {
+      const el = (this.$refs[index] as any)[0].$el as HTMLImageElement;
+      const data = el.src as string;
+      const download = document.createElement("a");
+      el.appendChild(download);
+      download.style.display = "none";
+      download.href = data;
+      download.download = `QR_${index}`;
+      download.click();
+      download.remove();
+    },
+    copiarLink(index: string) {
+      const container = (this.$refs[`cl-${index}`] as any)[0] as HTMLElement;
+      if (this.$copyText(`www.okituke.com.br/mensurius/${index}`, container)) {
+        this.$snotify.success("COPIADO COM SUCESSO!");
+      } else {
+        this.$snotify.error(
+          "O NAVEGADOR BLOQUEOU A TENTATIVA DE COPIAR. TENTE POR QR."
+        );
+      }
     },
     deletar(index: string) {
       this.$snotify.prompt(
@@ -105,14 +143,14 @@ export default Vue.extend({
                 const resposta = toast.value;
                 if (resposta.toLowerCase() === "sim") {
                   this.$delete(this.questionarios, index);
-                  this.$snotify.remove(toast.id);
+                  this.$snotify.remove(toast.id as string);
                   this.$snotify.success("DELETADO COM SUCESSO!");
-                  this.$root.recarregar();
+                  this.$root.$emit("recarregar");
                 } else {
                   this.$snotify.error(
                     `A AÇÃO FOI CANCELADA. A RESPOSTA "${resposta}" ESTAVA INCORRETA`
                   );
-                  this.$snotify.remove(toast.id);
+                  this.$snotify.remove(toast.id as string);
                 }
               },
               bold: true
@@ -120,7 +158,7 @@ export default Vue.extend({
             {
               text: "CANCELAR",
               action: (toast: SnotifyToast) => {
-                this.$snotify.remove(toast.id);
+                this.$snotify.remove(toast.id as string);
               }
             }
           ],

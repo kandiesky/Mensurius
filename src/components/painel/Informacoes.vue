@@ -55,12 +55,70 @@
             <th>VOTO</th>
             <th>DATA</th>
           </tr>
-          <tr v-for="(voto, index) in votos" :key="index + voto.data">
+          <tr
+            v-for="(voto, index) in questionario.votos"
+            :key="index + voto.data"
+          >
             <td>{{ voto.voto }}</td>
             <td>{{ voto.data }}</td>
           </tr>
         </table>
       </div>
+      <chart
+        :data="{
+          labels: questionario.grafico.labels,
+          datasets: [
+            {
+              label: 'Número de Votos Relacionados',
+              data: questionario.grafico.dataset,
+              backgroundColor: [
+                'rgba(255, 99, 132, 0.9)',
+                'rgba(54, 162, 235, 0.9)',
+                'rgba(255, 206, 86, 0.9)',
+                'rgba(75, 192, 192, 0.9)',
+                'rgba(153, 102, 255, 0.9)',
+                'rgba(0, 51, 102, 0.9)',
+                'rgba(0, 102, 102, 0.9)',
+                'rgba(0, 0, 255, 0.9)',
+                'rgba(102, 102, 153, 0.9)',
+                'rgba(102, 0, 204, 0.9)',
+                'rgba(153, 0, 255, 0.9)',
+                'rgba(204, 0, 204, 0.9)',
+                'rgba(255, 102, 0, 0.9)',
+                'rgba(255, 159, 64, 0.9)'
+              ],
+              borderColor: [
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)'
+              ],
+              borderWidth: 1
+            }
+          ]
+        }"
+        :options="{
+          scales: {
+            yAxes: [
+              {
+                ticks: {
+                  beginAtZero: true
+                }
+              }
+            ]
+          }
+        }"
+      />
     </div>
   </div>
   <div class="carregamento" v-else>
@@ -74,9 +132,6 @@ import size from "lodash/size";
 
 export default Vue.extend({
   props: ["questionarios", "paginas"],
-  mounted() {
-    console.log(this.$route.query.qid);
-  },
   methods: {
     tamanho(obj: {} | []) {
       return size(obj);
@@ -85,17 +140,13 @@ export default Vue.extend({
       this.$router.go(-1);
     }
   },
-  computed: {
-    questionario: function() {
-      return this.questionarios[this.$route.query.qid as string];
-    },
-    votos: function() {
-      return [
-        { voto: "1", data: "21/02/2020" },
-        { voto: "2", data: "22/02/2020" },
-        { voto: "1", data: "25/02/2020" }
-      ];
-    }
+  data() {
+    return {
+      questionario: this.questionarios[this.$route.query.qid as string]
+    };
+  },
+  components: {
+    chart: () => import("@/components/painel/externos/Chart.vue")
   }
 });
 </script>

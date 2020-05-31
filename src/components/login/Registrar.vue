@@ -1,50 +1,48 @@
 <template>
-  <div class="wrapper">
-    <form @submit.prevent="cadastrar()" class="card card-form">
-      <h3>CADASTRO MENSURIS</h3>
-      <div class="card-form-group">
-        <input type="text" id="login" v-model="login" />
-        <label for="login" :class="[login.length > 0 ? 'preenchido' : '']"
-          >NOME DE USUÁRIO</label
-        >
-      </div>
-      <div class="card-form-group">
-        <input type="password" id="senha" v-model="senha" />
-        <label for="senha" :class="[senha.length > 0 ? 'preenchido' : '']"
-          >SENHA</label
-        >
-      </div>
-      <div class="card-form-group">
-        <input
-          type="password"
-          id="confirmacaoSenha"
-          v-model="confirmacaoSenha"
-        />
-        <label
-          for="confirmacaoSenha"
-          :class="[confirmacaoSenha.length > 0 ? 'preenchido' : '']"
-        >
-          CONFIRME SUA SENHA
-        </label>
-      </div>
-      <div class="card-form-group">
-        <input type="email" id="login" v-model="email" />
-        <label for="email" :class="[email.length > 0 ? 'preenchido' : '']"
-          >EMAIL</label
-        >
-      </div>
-      <div class="card-form-group">
-        <input type="text" id="codigo" v-model="codigo" />
-        <label for="codigo" :class="[codigo.length > 0 ? 'preenchido' : '']"
-          >SEU CÓDIGO PARA CADASTRO</label
-        >
-      </div>
-      <button type="submit">CADASTRAR</button>
-    </form>
-  </div>
+  <form @submit.prevent="cadastrar()" class="card card-form">
+    <h3>CADASTRO MENSURIS</h3>
+    <div class="card-form-group">
+      <input type="text" id="login" v-model="login" />
+      <label for="login" :class="[login.length > 0 ? 'preenchido' : '']"
+        >NOME DE USUÁRIO</label
+      >
+    </div>
+    <div class="card-form-group">
+      <input type="password" id="senha" v-model="senha" />
+      <label for="senha" :class="[senha.length > 0 ? 'preenchido' : '']"
+        >SENHA</label
+      >
+    </div>
+    <div class="card-form-group">
+      <input type="password" id="confirmacaoSenha" v-model="confirmacaoSenha" />
+      <label
+        for="confirmacaoSenha"
+        :class="[confirmacaoSenha.length > 0 ? 'preenchido' : '']"
+        >CONFIRME SUA SENHA</label
+      >
+    </div>
+    <div class="card-form-group">
+      <input type="email" id="login" v-model="email" />
+      <label for="email" :class="[email.length > 0 ? 'preenchido' : '']"
+        >EMAIL</label
+      >
+    </div>
+    <div class="card-form-group">
+      <input type="text" id="codigo" v-model="codigo" />
+      <label for="codigo" :class="[codigo.length > 0 ? 'preenchido' : '']"
+        >SEU CÓDIGO PARA CADASTRO</label
+      >
+    </div>
+    <button type="submit">CADASTRAR</button>
+    <br />
+    <router-link tag="button" :to="{ path: '/login' }" class="mt-2"
+      >QUERO FAZER LOGIN</router-link
+    >
+  </form>
 </template>
 <script lang="ts">
 import Vue from "vue";
+import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
   props: ["estado"],
   data() {
@@ -78,8 +76,8 @@ export default Vue.extend({
             codigo: this.codigo
           }
         })
-        .then(response => {
-          if (!response.resultado) {
+        .then((response: AxiosResponse) => {
+          if (!response.data.resultado) {
             this.$snotify.warning(response.data.mensagem);
             return;
           }
@@ -87,7 +85,7 @@ export default Vue.extend({
           this.$snotify.success(response.data.mensagem);
           this.estado.sessao = response.data.data;
         })
-        .catch(reason => {
+        .catch((reason: AxiosError) => {
           this.$snotify.error(
             `Houve um problema ao se conectar com o servidor: ${reason}`
           );

@@ -3,7 +3,7 @@ import VueRouter, { RouteConfig } from "vue-router";
 import login from "../views/Login.vue";
 import loginForm from "../components/login/Login.vue";
 import codigoForm from "../components/login/Codigo.vue";
-import registrarForm from "../components/login/Registrar.vue";
+//import registrarForm from "../components/login/Registrar.vue";
 import painel from "../views/Painel.vue";
 import questionario from "../views/Questionario.vue";
 import informacoes from "../components/painel/Informacoes.vue";
@@ -15,7 +15,6 @@ Vue.use(VueRouter);
 const routes: Array<RouteConfig> = [
   {
     path: "/",
-    name: "Login",
     component: login,
     children: [
       {
@@ -27,12 +26,12 @@ const routes: Array<RouteConfig> = [
         name: "Código",
         path: "",
         component: codigoForm
-      },
-      {
+      }
+      /* {
         name: "Registrar",
         path: "registrar",
         component: registrarForm
-      }
+      } */
     ]
   },
   {
@@ -42,7 +41,6 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: "/painel",
-    name: "Dashboard",
     component: painel,
     children: [
       {

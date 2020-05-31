@@ -1,7 +1,7 @@
 module.exports = {
   runtimeCompiler: true,
-  publicPath: "/public/",
-  outputDir: "../public",
+  publicPath: "mensuris/mensurius/",
+  outputDir: "../mensurius",
   indexPath: "index.php",
   productionSourceMap: false,
   chainWebpack: config => {

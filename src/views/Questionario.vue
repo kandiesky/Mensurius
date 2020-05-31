@@ -52,9 +52,15 @@ export default Vue.extend({
       return {
         nome: "0000000",
         codigo: "478as",
-        pergunta: "Olá, tudo bem?",
+        pergunta: "Pergunta Aqui",
         midia: "",
-        respostas: [{ texto: "Sim" }, { texto: "Não" }, { texto: "Talvez" }],
+        respostas: [
+          { texto: "Resposta 1" },
+          { texto: "Resposta 2" },
+          { texto: "Resposta 3" },
+          { texto: "Resposta 4" },
+          { texto: "As respostas têm um máximo de 5" }
+        ],
         votosOcultos: false,
         quantidadeRespostas: 115,
         validade: "22/05/2020",

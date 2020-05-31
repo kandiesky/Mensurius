@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
   props: ["estado"],
@@ -39,13 +40,23 @@ export default Vue.extend({
             operacao: "checar"
           }
         })
-        .then(response => {
-          if (response.data.resultado == true) {
-            if (this.nome != "") this.estado.sessao.nome = this.nome;
-            this.$router.push(`/questionario?id=${this.codigo}`);
+        .then((response: AxiosResponse) => {
+          if (response.data.resultado != true) {
+            this.$snotify.warning(
+              `O código ${this.codigo} é inválido. Verifique se digitou corretamente`
+            );
+            return;
           }
+          if (this.nome != "") {
+            this.estado.sessao.nome = this.nome;
+          }
+
+          this.$router.push({
+            path: "/questionario",
+            query: { qid: this.codigo }
+          });
         })
-        .catch(reason => {
+        .catch((reason: AxiosError) => {
           this.$snotify.error(
             `Houve um problema ao se comunicar com servidor: ${reason}`
           );
@@ -54,8 +65,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      codigo: "" as string,
-      nome: "" as string
+      codigo: "",
+      nome: ""
     };
   }
 });

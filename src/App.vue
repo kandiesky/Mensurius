@@ -25,10 +25,18 @@
         <icon icon="home" />
         <span>&nbsp;Início</span>
       </router-link>
+      <router-link to="/" class="sub" v-if="!estado.sessao.id">
+        <icon icon="qrcode" />
+        <span>&nbsp;‏‏‎ ‎Código</span>
+      </router-link>
       <router-link to="login" class="sub" v-if="!estado.sessao.id">
-        <icon icon="user" />
+        <icon icon="user-check" />
         <span>&nbsp;Login</span>
       </router-link>
+      <!-- <router-link to="registrar" class="sub" v-if="!estado.sessao.id">
+        <icon icon="id-card-alt" />
+        <span>&nbsp;Cadastro</span>
+      </router-link> -->
       <router-link v-if="estado.sessao.id" to="/painel">
         <icon icon="th" />
         <span>&nbsp;Dashboard</span>
@@ -42,8 +50,14 @@
         <span>&nbsp;Sair</span>
       </a>
     </div>
-    <router-view :estado="estado" />
+    <transition name="fade" mode="out-in">
+      <router-view :estado="estado" />
+    </transition>
     <vue-snotify />
+    <footer>
+      Utilitário Mensurius <br />
+      © MULTIKOMBRASIL / Scripta 2020
+    </footer>
   </main>
 </template>
 
@@ -82,7 +96,7 @@ export default Vue.extend({
       localStorage.setItem("navbar", "0");
     }
     if (localStorage.getItem("tema") === null) {
-      localStorage.setItem("tema", "1");
+      localStorage.setItem("tema", "0");
     }
   }
 });

@@ -1,7 +1,9 @@
 <template>
   <div id="container-login" class="container">
     <div class="wrapper flex flex-center flex-column">
-      <router-view :estado="estado" />
+      <transition name="zoomRight">
+        <router-view :estado="estado" :key="this.$route.name" />
+      </transition>
     </div>
   </div>
 </template>

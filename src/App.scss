@@ -6,21 +6,21 @@
 }
 
 .tema-claro {
-    --background: #d4d4d3;
+    --background: #ffffff;
     --texto: #333533;
     --texto-alt: #242423;
-    --base: #805b10;
-    --complementar: #fad643;
-    --icon: #a47e1b;
+    --base: #0083d0;
+    --complementar: #e1e0ea;
+    --icon: #0e96fd;
 }
 
 .tema-escuro {
     --background: #313131;
     --texto: #e7e7e7;
     --texto-alt: #ffffff;
-    --base: #6fffe9;
-    --complementar: #1c2541;
-    --icon: #0353a4;
+    --base: #06d6a0;
+    --complementar: #0b2737;
+    --icon: #1a936f;
 }
 
 %transicao {
@@ -90,7 +90,7 @@ body {
 
     a {
         display: inline-block;
-        border-bottom: 2px solid var(--icon);
+        //border-bottom: 2px solid var(--icon);
         margin-bottom: .5rem;
         cursor: pointer;
         font-size: 1.2rem;
@@ -100,6 +100,7 @@ body {
         color: var(--base);
 
         svg {
+            text-align: center;
             color: var(--icon)
         }
     }
@@ -120,7 +121,7 @@ body {
     }
 
     &.retraida {
-        width: 43px;
+        width: 50px;
 
         .sub {
             display: none;
@@ -145,11 +146,13 @@ body {
 
 .container {
     box-sizing: border-box;
+    position: relative;
     text-align: center;
     padding: .7rem;
     width: 100%;
     height: 100%;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .mt-2 {
@@ -157,6 +160,7 @@ body {
 }
 
 .wrapper {
+    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -187,7 +191,7 @@ body {
     max-width: 400px;
     word-wrap: break-word;
     background-color: var(--complementar);
-    box-shadow: 1.5px 2px var(--base);
+    //box-shadow: 1.5px 2px var(--base);
     margin-bottom: .5rem;
     background-clip: border-box;
     border: 1px solid rgba(0, 0, 0, .125);
@@ -216,7 +220,7 @@ body {
             border-left: 2px solid var(--icon);
         }
     }
-
+    
     .qr {
         display: inline-block;
         width: 150px;
@@ -237,7 +241,8 @@ body {
 
 .card-form {
     input {
-        border: 2px solid var(--base);
+        //border: 2px solid var(--base);
+        border: 0;
         background: var(--background);
         color: var(--texto-alt);
         padding: .75rem;
@@ -298,7 +303,7 @@ body {
     label{
         display: inline-block;
         cursor: pointer;
-        border: 2px solid var(--base);
+        //border: 2px solid var(--base);
         background: var(--background);
         color: var(--texto-alt);
         padding: 1rem;
@@ -413,7 +418,7 @@ body {
     }
 }
 
-button {
+button, .btn {
     display: inline-block;
     cursor: pointer;
     word-wrap: break-word;
@@ -444,4 +449,22 @@ h4,
 h5 {
     margin-block-end: .4rem;
     margin-block-start: .4rem;
+}
+
+footer{
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(0, -50%);
+    z-index: 3;
+    color: var(--texto-alt);
+    margin-top: .3rem;
+    font-size: .6rem;
+}
+
+/* Patches em animações */
+.card, .wrapper {
+    &.zoomRight-leave-active, &.zoomRight-leave-to, &.zoomRight-enter-active, &.zoomRight-enter-to{
+        position: absolute;
+    }
 }

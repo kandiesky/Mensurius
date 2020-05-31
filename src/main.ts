@@ -14,7 +14,7 @@ import {
   faCalendarCheck,
   faTrashAlt,
   faAngleDoubleLeft,
-  faUser,
+  faIdCardAlt,
   faTh,
   faCircleNotch,
   faInfoCircle,
@@ -25,7 +25,9 @@ import {
   faArrowAltCircleLeft,
   faHome,
   faPlusSquare,
-  faSignOutAlt
+  faSignOutAlt,
+  faUserCheck,
+  faQrcode
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -41,7 +43,7 @@ library.add(
   faCalendarCheck,
   faTrashAlt,
   faAngleDoubleLeft,
-  faUser,
+  faUserCheck,
   faTh,
   faCircleNotch,
   faInfoCircle,
@@ -49,7 +51,9 @@ library.add(
   faEyeSlash,
   faPlusCircle,
   faCaretLeft,
-  faArrowAltCircleLeft
+  faArrowAltCircleLeft,
+  faIdCardAlt,
+  faQrcode
 );
 
 Vue.component("icon", FontAwesomeIcon);
@@ -68,11 +72,15 @@ Vue.use(Snotify, {
   }
 });
 
-import vueQr from "vue-qr";
-Vue.component("qr", vueQr);
+//import vueQr from "vue-qr";
+Vue.component("qr", () => import("vue-qr"));
+
+//Vue clipboard
+import VueClipboard from "vue-clipboard2";
+Vue.use(VueClipboard);
 
 const mainEl = document.getElementById("app") as Element,
-  qid = mainEl.getAttribute("data-qid")?.toString() as string; //Id do questionário, alfanumérico
+  qid = mainEl.getAttribute("data-qid")?.toString(); //Id do questionário, alfanumérico
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
