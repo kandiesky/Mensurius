@@ -20,7 +20,13 @@
       </div>
       <h3>MÍDIA</h3>
       <div class="card-form-group">
-        <input type="file" id="midia" ref="midia" @change="preverMidia()" />
+        <input
+          accept=".jpg, .jpeg, .png, .webp"
+          type="file"
+          id="midia"
+          ref="midia"
+          @change="preverMidia()"
+        />
         <button
           title="Clique aqui para apagar a mídia"
           v-if="midia"
@@ -67,6 +73,7 @@
 <script lang="ts">
 import Vue from "vue";
 import size from "lodash/size";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   props: ["questionarios", "paginas"],
@@ -123,16 +130,26 @@ export default Vue.extend({
     },
     criar() {
       const formData = new FormData();
+      const inputMidia = this.$refs.midia as HTMLInputElement;
+
       formData.append("nome", this.nome);
       formData.append("pergunta", this.pergunta);
       formData.append("vencimento", this.vencimento);
-      formData.append("respostas", this.respostas);
-      formData.append("midia", this.midia);
+      formData.append("respostas", JSON.stringify(this.respostas));
+
+      if (inputMidia && inputMidia.files[0]) {
+        formData.append("midia", inputMidia.files[0] as Blob, "midia");
+      }
 
       this.$http({
         method: "POST",
         url: "/mensurius/api/criar.questionario.php",
-        data: formData
+        data: formData,
+        onUploadProgress: function(progressEvent) {
+          console.log(progressEvent);
+        }
+      }).then((response: AxiosResponse) => {
+        console.log(response);
       });
     }
   }

@@ -111,18 +111,6 @@ new Vue({
         path: `/questionario`,
         query: { qid }
       });
-    } else {
-      this.$http
-        .get("/mensurius/api/estado.sessao.php")
-        .then((response: AxiosResponse) => {
-          if (response.data.resultado && this.$route.path != "/questionario") {
-            this.estado.sessao = response.data.resposta.sessao;
-            this.$snotify.info(
-              "VOCÊ JÁ ESTÁ LOGADO E FOI REDIRECIONADO PARA O PAINEL"
-            );
-            this.$router.push("/painel");
-          }
-        });
     }
     this.estado.carregamento = false;
   }

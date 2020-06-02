@@ -54,11 +54,9 @@ export default Vue.extend({
     if (this.estado.sessao.id == 0) {
       this.$router.push("/");
     }
-    this.$nextTick(() => {
+    this.carregarQuestionarios();
+    this.$root.$on("recarregar", () => {
       this.carregarQuestionarios();
-      this.$root.$on("recarregar", () => {
-        this.carregarQuestionarios();
-      });
     });
   }
 });
