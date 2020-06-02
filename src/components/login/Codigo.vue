@@ -1,22 +1,18 @@
 <template>
-  <form @submit.prevent="checarCodigo()" class="card card-form">
-    <div class="card-form-group">
-      <input type="text" v-model="codigo" id="codigo" />
-      <label for="codigo" :class="[codigo.length > 0 ? 'preenchido' : '']"
-        >CÓDIGO DO QUESTIONÁRIO</label
+  <keep-alive>
+    <form @submit.prevent="checarCodigo()" class="card card-form">
+      <div class="card-form-group">
+        <input type="text" v-model="codigo" id="codigo" />
+        <label for="codigo" :class="[codigo.length > 0 ? 'preenchido' : '']"
+          >CÓDIGO DO QUESTIONÁRIO</label
+        >
+      </div>
+      <button type="submit">RESPONDER</button>
+      <router-link tag="button" :to="{ path: 'login' }" class="mt-2"
+        >ACESSAR CONTA</router-link
       >
-    </div>
-    <div class="card-form-group">
-      <input type="text" v-model="nome" id="nome" />
-      <label for="nome" :class="[nome.length > 0 ? 'preenchido' : '']"
-        >OPCIONAL: SEU NOME</label
-      >
-    </div>
-    <button type="submit">RESPONDER</button>
-    <router-link tag="button" :to="{ path: 'login' }" class="mt-2"
-      >QUERO ACESSAR MINHA CONTA</router-link
-    >
-  </form>
+    </form>
+  </keep-alive>
 </template>
 
 <script lang="ts">
@@ -28,27 +24,27 @@ export default Vue.extend({
   methods: {
     checarCodigo() {
       if (!this.codigo) {
-        this.$snotify.warning("Nenhum código foi digitado!");
-        return false;
+        this.$snotify.warning("NENHUM CÓDIGO FOI DIGITADO!");
+        return;
       }
-      this.$http
-        .post("api/questionario.php", {
-          params: {
-            id: this.estado.sessao.id,
-            codigo: this.codigo,
-            nome: this.nome,
-            operacao: "checar"
-          }
-        })
+      if (localStorage.getItem(this.codigo) == "true") {
+        this.$snotify.error("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
+        return;
+      }
+
+      this.$http({
+        method: "GET",
+        url: "/mensurius/api/checar.questionario.php",
+        params: {
+          qid: this.codigo
+        }
+      })
         .then((response: AxiosResponse) => {
           if (response.data.resultado != true) {
             this.$snotify.warning(
-              `O código ${this.codigo} é inválido. Verifique se digitou corretamente`
+              `O CÓDIGO ${this.codigo} É INVÁLIDO. VERIFIQUE SE DIGITOU CORRETAMENTE.`
             );
             return;
-          }
-          if (this.nome != "") {
-            this.estado.sessao.nome = this.nome;
           }
 
           this.$router.push({
@@ -58,15 +54,14 @@ export default Vue.extend({
         })
         .catch((reason: AxiosError) => {
           this.$snotify.error(
-            `Houve um problema ao se comunicar com servidor: ${reason}`
+            "NÃO FOI POSSÍVEL SE CONECTAR COM O SERVIDOR. TENTE NOVAMENTE MAIS TARDE."
           );
         });
     }
   },
   data() {
     return {
-      codigo: "",
-      nome: ""
+      codigo: ""
     };
   }
 });

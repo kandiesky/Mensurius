@@ -7,7 +7,7 @@
       :key="index"
     >
       <h2>{{ questionario.nome }}</h2>
-      <small>Votos: {{ questionario.quantidadeRespostas }}</small>
+      <small>Votos: {{ questionario.votosTotal }}</small>
       <br />
       <small>Prazo de Vencimento: {{ questionario.validade }}</small>
       <div :id="`menu-${questionario.codigo}`">
@@ -59,12 +59,14 @@
           :key="index"
         >
           <span>
-            {{ resposta.resposta }}
+            {{ resposta.texto }}
             <br />
             {{
-              ((resposta.contagem / questionario.quantidadeRespostas) * 100)
-                .toString()
-                .slice(0, 5)
+              resposta.contagem != 0
+                ? ((resposta.contagem / questionario.votosTotal) * 100)
+                    .toString()
+                    .slice(0, 5)
+                : "0"
             }}%
           </span>
           <div class="progresso">
@@ -72,9 +74,7 @@
               class="preenchimento-progresso"
               :style="{
                 height:
-                  ((resposta.contagem / questionario.quantidadeRespostas) *
-                    100) /
-                    2 +
+                  ((resposta.contagem / questionario.votosTotal) * 100) / 2 +
                   'px'
               }"
             />
@@ -89,7 +89,7 @@
   </div>
   <span v-else-if="paginas.total == -1">
     Você ainda não tem um questionário. Que tal
-    <button type="button">criar um?</button>
+    <router-link tag="button" to="/painel/criar">criar um?</router-link>
   </span>
 </template>
 

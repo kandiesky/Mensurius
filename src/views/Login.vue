@@ -13,11 +13,6 @@ import Vue from "vue";
 
 export default Vue.extend({
   name: "Login",
-  props: ["estado"],
-  mounted() {
-    if (this.estado.sessao.id) {
-      this.$router.push("/painel");
-    }
-  }
+  props: ["estado"]
 });
 </script>

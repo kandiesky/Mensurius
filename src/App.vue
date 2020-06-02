@@ -36,7 +36,7 @@
       <!-- <router-link to="registrar" class="sub" v-if="!estado.sessao.id">
         <icon icon="id-card-alt" />
         <span>&nbsp;Cadastro</span>
-      </router-link> -->
+      </router-link>-->
       <router-link v-if="estado.sessao.id" to="/painel">
         <icon icon="th" />
         <span>&nbsp;Dashboard</span>
@@ -55,14 +55,15 @@
     </transition>
     <vue-snotify />
     <footer>
-      Utilitário Mensurius <br />
-      © MULTIKOMBRASIL / Scripta 2020
+      Utilitário Mensurius
+      <br />© MULTIKOMBRASIL / Scripta 2020
     </footer>
   </main>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
   props: ["estado"],
   data() {
@@ -83,12 +84,23 @@ export default Vue.extend({
       localStorage.setItem("navbar", `${this.navbarRetraida}`);
     },
     sair() {
-      this.estado.sessao = {
-        nome: "",
-        id: "",
-        chave: ""
-      };
-      this.$router.push("/");
+      this.$http
+        .get("/mensurius/api/logout.php")
+        .then((response: AxiosResponse) => {
+          if (response.data.resultado) {
+            this.estado.sessao = {
+              nome: "",
+              id: "",
+              chave: "",
+              relacionado: 3
+            };
+            this.$router.push("/");
+          }
+          this.$snotify.success(response.data.mensagem);
+        })
+        .catch((reason: AxiosError) => {
+          this.$snotify.error("HOUVE UMA FALHA AO SE CONECTAR COM O SERVIDOR!");
+        });
     }
   },
   mounted() {

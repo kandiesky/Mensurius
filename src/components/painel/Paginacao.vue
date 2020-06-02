@@ -65,6 +65,7 @@ export default Vue.extend({
           }
         );
       }
+      this.$root.$emit("recarregar");
     }
   }
 });

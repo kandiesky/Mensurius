@@ -1,6 +1,10 @@
 <template>
   <div class="wrapper flex flex-center">
-    <form class="card card-lg card-form" @submit.prevent="votar()">
+    <form
+      v-if="carregado"
+      class="card card-lg card-form"
+      @submit.prevent="votar()"
+    >
       <h1>{{ questionario.pergunta }}</h1>
       <small>Validade: {{ questionario.validade }}</small>
       <div v-if="questionario.midia.length > 0" class="wrapper">
@@ -35,45 +39,90 @@
         SALVAR RESPOSTA
       </button>
     </form>
+    <div class="carregamento" v-else>
+      <icon icon="circle-notch" spin size="6x" />
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from "vue";
+import { AxiosResponse, AxiosError } from "axios";
 export default Vue.extend({
   props: ["estado"],
   data() {
     return {
-      selecionado: -1
+      selecionado: -1,
+      carregado: false,
+      questionario: {} as any
     };
   },
-  computed: {
-    questionario: function() {
-      return {
-        nome: "0000000",
-        codigo: "478as",
-        pergunta: "Pergunta Aqui",
-        midia: "",
-        respostas: [
-          { texto: "Resposta 1" },
-          { texto: "Resposta 2" },
-          { texto: "Resposta 3" },
-          { texto: "Resposta 4" },
-          { texto: "As respostas têm um máximo de 5" }
-        ],
-        votosOcultos: false,
-        quantidadeRespostas: 115,
-        validade: "22/05/2020",
-        criacao: "19/05/2020 09:35"
-      };
-    }
+  mounted() {
+    this.$http({
+      method: "GET",
+      url: "/mensurius/api/carregar.questionario.php",
+      params: {
+        qid: this.$route.query.qid
+      }
+    })
+      .then((response: AxiosResponse) => {
+        if (response.data.resultado) {
+          this.questionario = response.data.resposta;
+          if (localStorage.getItem(this.questionario.codigo) == "true") {
+            this.$snotify.info("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
+            this.$router.push("/");
+            return;
+          }
+          this.carregado = true;
+          this.$snotify.success("QUESTIONÁRIO CARREGADO COM SUCESSO!");
+        } else {
+          this.$snotify.error(response.data.mensagem);
+          this.$router.push("/");
+        }
+      })
+      .catch(() => {
+        this.$snotify.error("NÃO FOI POSSÍVEL SE CONECTAR AO SERVIDOR.");
+        this.$router.push("/");
+      });
   },
   methods: {
     votar: function() {
       if (this.selecionado < 0 && this.selecionado > 5) {
-        this.$snotify.warning("Nenhum valor foi selecionado!", "AVISO");
-        return false;
+        this.$snotify.warning("NENHUM VALOR FOI SELECIONADO!", "AVISO");
+        return;
       }
+
+      if (localStorage.getItem(this.questionario.codigo) == "true") {
+        this.$snotify.info("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
+        this.$router.push("/");
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("voto", `${this.selecionado}`);
+      formData.append("qid", this.questionario.codigo);
+      formData.append("relacionado", this.estado.sessao.relacionado);
+      formData.append("votante", this.estado.sessao.nome);
+
+      this.$http({
+        method: "POST",
+        url: "/mensurius/api/votar.php",
+        data: formData
+      })
+        .then((response: AxiosResponse) => {
+          if (response.data.resultado) {
+            this.$snotify.success(response.data.mensagem);
+            localStorage.setItem(this.questionario.codigo as string, "true");
+            setTimeout(() => {
+              this.$router.push("/");
+            }, 1200);
+          } else {
+            this.$snotify.error(response.data.mensagem);
+          }
+        })
+        .catch((reason: AxiosError) => {
+          this.$snotify.error(`HOUVE UM ERRO ${reason}...`);
+        });
     }
   }
 });

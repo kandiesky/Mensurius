@@ -58,7 +58,7 @@ library.add(
 
 Vue.component("icon", FontAwesomeIcon);
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import vueAxios from "vue-axios";
 
 Vue.use(vueAxios, axios);
@@ -80,7 +80,8 @@ import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
 
 const mainEl = document.getElementById("app") as Element,
-  qid = mainEl.getAttribute("data-qid")?.toString(); //Id do questionário, alfanumérico
+  qid = mainEl.getAttribute("data-qid")?.toString(),
+  relacionado = mainEl.getAttribute("data-relacionado"); //Id do questionário, alfanumérico
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
@@ -98,16 +99,31 @@ new Vue({
       sessao: {
         nome: "" as string, //Nome do usuário que está na sessão. Mais utilizado para visitantes
         id: 0 as number, //ID do usuário da sessão. É batido junto com a Chave para verificar se o login é legítimo
-        chave: "" as string //Chave do usuário da sessão. É gerado via php com alguns parâmetros
+        chave: "" as string, //Chave do usuário da sessão. É gerado via php com alguns parâmetros
+        relacionado:
+          relacionado?.length && relacionado != "" ? relacionado : "3"
       }
     }
   },
   mounted() {
-    this.$nextTick(() => {
-      if (qid && qid.length > 4) {
-        this.$router.push(`/questionario?id=${qid}`);
-      }
-      this.estado.carregamento = false;
-    });
+    if (qid && qid.length > 4) {
+      this.$router.push({
+        path: `/questionario`,
+        query: { qid }
+      });
+    } else {
+      this.$http
+        .get("/mensurius/api/estado.sessao.php")
+        .then((response: AxiosResponse) => {
+          if (response.data.resultado && this.$route.path != "/questionario") {
+            this.estado.sessao = response.data.resposta.sessao;
+            this.$snotify.info(
+              "VOCÊ JÁ ESTÁ LOGADO E FOI REDIRECIONADO PARA O PAINEL"
+            );
+            this.$router.push("/painel");
+          }
+        });
+    }
+    this.estado.carregamento = false;
   }
 });

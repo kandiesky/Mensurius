@@ -9,8 +9,8 @@
     <button @click="mudarGrafico('bar')">
       Gráfico de Barra {{ this.type == "bar" ? "(Ativo)" : "" }}
     </button>
-    <button @click="mudarGrafico('radar')">
-      Gráfico de Radar {{ this.type == "radar" ? "(Ativo)" : "" }}
+    <button @click="mudarGrafico('doughnut')">
+      Gráfico de Doughnut {{ this.type == "doughnut" ? "(Ativo)" : "" }}
     </button>
     <button @click="mudarGrafico('polarArea')">
       Gráfico Polar {{ this.type == "polarArea" ? "(Ativo)" : "" }}

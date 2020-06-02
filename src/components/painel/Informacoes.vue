@@ -48,22 +48,6 @@
           <span>{{ resposta.contagem }}</span>
         </div>
       </div>
-      <div class="flex flex-column">
-        <h3>VOTOS RECENTES</h3>
-        <table>
-          <tr>
-            <th>VOTO</th>
-            <th>DATA</th>
-          </tr>
-          <tr
-            v-for="(voto, index) in questionario.votos"
-            :key="index + voto.data"
-          >
-            <td>{{ voto.voto }}</td>
-            <td>{{ voto.data }}</td>
-          </tr>
-        </table>
-      </div>
       <chart
         :data="{
           labels: questionario.grafico.labels,

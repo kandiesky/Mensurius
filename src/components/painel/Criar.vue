@@ -21,6 +21,14 @@
       <h3>MÍDIA</h3>
       <div class="card-form-group">
         <input type="file" id="midia" ref="midia" @change="preverMidia()" />
+        <button
+          title="Clique aqui para apagar a mídia"
+          v-if="midia"
+          type="button"
+          @click="removerMidia()"
+        >
+          <icon icon="trash-alt" />
+        </button>
       </div>
       <div v-if="midia.length > 0" class="wrapper">
         <img :src="midia" alt="Previsualização de Mídia" class="midia" />
@@ -109,9 +117,23 @@ export default Vue.extend({
     removerResposta(index: number) {
       this.$delete(this.respostas, index);
     },
+    removerMidia() {
+      (this.$refs.midia as HTMLInputElement).value = "";
+      this.midia = "";
+    },
     criar() {
-      /* this.$http.post(); */
-      console.log(this);
+      const formData = new FormData();
+      formData.append("nome", this.nome);
+      formData.append("pergunta", this.pergunta);
+      formData.append("vencimento", this.vencimento);
+      formData.append("respostas", this.respostas);
+      formData.append("midia", this.midia);
+
+      this.$http({
+        method: "POST",
+        url: "/mensurius/api/criar.questionario.php",
+        data: formData
+      });
     }
   }
 });

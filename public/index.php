@@ -1,7 +1,18 @@
-<?php 
-$qid = isset($_GET['qid']) ? $_GET['qid'] : "0";
-$qid = str_replace('"', "", $qid);
+<?php
+$qid = "0";
+$relacionado = "0";
+if (isset($_SERVER['PATH_INFO'])) {
+    $path = $_SERVER['PATH_INFO'];
+    $path = substr($path, 1); //Tira a primeira /, que é ruim para cá
+    $arrayPaths = explode("/", $path, 2);
 
+    if(count($arrayPaths) == 1){
+      $arrayPaths[] = "";
+    }
+    
+    $qid = str_replace('"', "", $arrayPaths[0]);
+    $relacionado = str_replace('"', "", $arrayPaths[1]);
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt">
@@ -15,6 +26,6 @@ $qid = str_replace('"', "", $qid);
     <noscript>
       <strong>Pedimos desculpas, mas o Mensurius não funciona sem JavaScript. Se puder habilitar ou atualizar seu navegador, poderá aproveitar com totalidade os recursos!</strong>
     </noscript>
-    <main id="app" data-qid="0"></main>
+    <main id="app" data-qid="<?=$qid?>" data-relacionado="<?=$relacionado?>"></main>
   </body>
 </html>
