@@ -1,14 +1,14 @@
 <template>
-  <div class="wrapper flex flex-center">
+  <div class="wrapper">
     <form
       v-if="carregado"
-      class="card card-lg card-form"
+      class="card card-lg card-form flex-center-fix"
       @submit.prevent="votar()"
     >
       <h1>{{ questionario.pergunta }}</h1>
       <small>Validade: {{ questionario.validade }}</small>
-      <div v-if="questionario.midia.length > 0" class="wrapper">
-        <img :src="questionario.midia.length" class="midia" />
+      <div v-if="questionario.midia.length > 0">
+        <img :src="questionario.midia" class="midia" />
       </div>
       <h2 class="mt-2">
         {{

@@ -32,6 +32,10 @@
     height: 100%;
 }
 
+.overflow-auto {
+    overflow: auto;
+}
+
 .box-sizing {
     box-sizing: border-box;
 }
@@ -151,7 +155,9 @@ body {
     text-align: center;
     padding: .7rem;
     width: 100%;
-    height: 100%;
+    //height: 100%;
+    display: flex;
+    justify-content: center;
     overflow-y: auto;
     overflow-x: hidden;
 }
@@ -161,9 +167,10 @@ body {
 }
 
 .wrapper {
-    position: relative;
     width: 100%;
-    height: 100%;
+    height: auto;
+    overflow: auto;
+    text-align: center;
 }
 
 .flex-column {
@@ -181,14 +188,14 @@ body {
 }
 
 .card {
+    overflow-y: auto;
     box-sizing: border-box;
     position: relative;
     display: inline-flex;
+    flex-direction: column;
     margin: .5rem;
     padding: 1rem;
     width: 100%;
-    flex-direction: column;
-    min-width: 0;
     max-width: 400px;
     word-wrap: break-word;
     background-color: var(--complementar);
@@ -221,7 +228,7 @@ body {
             border-left: 2px solid var(--icon);
         }
     } */
-    
+
     .qr {
         display: inline-block;
         width: 150px;
@@ -237,7 +244,20 @@ body {
 }
 
 .card-lg {
+    scrollbar-width: thin;
+    display: inline-block;
+    /* 
+    vertical-align: middle;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); */
     max-width: 800px;
+
+    .midia {
+        max-height: 350px;
+        width: auto;
+        max-width: 100%;
+    }
 }
 
 .card-form {
@@ -296,12 +316,14 @@ body {
         width: 100%;
     }
 }
-.card-respostas{
-    input:checked ~ label{
+
+.card-respostas {
+    input:checked~label {
         background: var(--icon);
         color: var(--texto);
     }
-    label{
+
+    label {
         display: inline-block;
         cursor: pointer;
         //border: 2px solid var(--base);
@@ -313,12 +335,14 @@ body {
         box-sizing: border-box;
         width: 100%;
     }
-    input{
+
+    input {
         position: absolute;
         opacity: 0;
         display: none;
     }
 }
+
 .dropdown {
     box-sizing: border-box;
     opacity: .2;
@@ -419,7 +443,8 @@ body {
     }
 }
 
-button, .btn {
+button,
+.btn {
     display: inline-block;
     cursor: pointer;
     word-wrap: break-word;
@@ -439,8 +464,11 @@ button, .btn {
         opacity: .6;
     }
 }
-.btn-lg{
+
+.btn-lg {
     padding: .725rem .265rem;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 h1,
@@ -452,7 +480,7 @@ h5 {
     margin-block-start: .4rem;
 }
 
-footer{
+footer {
     position: absolute;
     bottom: 0;
     left: 0;
@@ -463,8 +491,80 @@ footer{
 }
 
 /* Patches em animações */
-.card, .wrapper {
-    &.zoomRight-leave-active, &.zoomRight-leave-to, &.zoomRight-enter-active, &.zoomRight-enter-to{
+.card,
+.wrapper {
+
+    &.zoomRight-leave-active,
+    &.zoomRight-leave-to,
+    &.zoomRight-enter-active,
+    &.zoomRight-enter-to {
         position: absolute;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .main {
+        margin-top: 50px;
+    }
+
+    .navbar {
+        position: fixed;
+        top: 0;
+    }
+
+    .vertical-navbar {
+        width: 100%;
+        height: auto;
+        z-index: 2;
+        transition: height 0.4s ease;
+
+        a {
+            margin-right: 0;
+            display: block;
+        }
+
+        &.retraida {
+            height: 50px;
+            width: 100%;
+
+            .sub {
+                display: none;
+            }
+
+            a {
+                margin-bottom: 0;
+                margin-right: 1rem;
+                text-align: center;
+                display: inline-block;
+
+                span {
+                    display: none;
+                }
+
+                &#sair {
+                    position: absolute;
+                    top: 5px;
+                    right: 0;
+                }
+                &#tema{
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .card {
+        margin: 0;
+        margin-top: .5rem;
+    }
+
+    .card-lg {
+        top: 0;
+        left: 0;
+        transform: unset;
+    }
+
+    footer {
+        display: none;
     }
 }

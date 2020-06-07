@@ -58,7 +58,7 @@ library.add(
 
 Vue.component("icon", FontAwesomeIcon);
 
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
 import vueAxios from "vue-axios";
 
 Vue.use(vueAxios, axios);

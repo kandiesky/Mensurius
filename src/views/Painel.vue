@@ -3,6 +3,7 @@
     <router-view
       :questionarios="questionarios"
       :paginas="paginas"
+      :estado="estado"
       :key="this.$route.path"
     />
   </transition-group>
@@ -52,7 +53,7 @@ export default Vue.extend({
   },
   mounted() {
     if (this.estado.sessao.id == 0) {
-      this.$router.push("/");
+      this.$router.push("/login");
     }
     this.carregarQuestionarios();
     this.$root.$on("recarregar", () => {

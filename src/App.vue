@@ -16,7 +16,7 @@
           :transform="{ rotate: navbarRetraida ? 180 : 0 }"
         />
       </a>
-      <a @click="mudarTema()">
+      <a @click="mudarTema()" id="tema">
         <icon v-if="tema == 0" icon="sun" />
         <icon v-else icon="moon" />
         <span>&nbsp; Modo {{ tema == 0 ? "Claro" : "Noturno" }}</span>
@@ -45,13 +45,13 @@
         <icon icon="plus-square" />
         <span>&nbsp;Criar Questionário</span>
       </router-link>
-      <a v-if="estado.sessao.id" @click="sair()">
+      <a v-if="estado.sessao.id" id="sair" @click="sair()">
         <icon icon="sign-out-alt" />
         <span>&nbsp;Sair</span>
       </a>
     </div>
     <transition name="fade" mode="out-in">
-      <router-view :estado="estado" />
+      <router-view :estado="estado" class="main" />
     </transition>
     <vue-snotify />
     <footer>
@@ -63,15 +63,13 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse } from "axios";
 export default Vue.extend({
   props: ["estado"],
   data() {
     return {
-      navbarRetraida: parseInt(
-        localStorage.getItem("navbar") as string
-      ) as number,
-      tema: parseInt(localStorage.getItem("tema") as string) as number
+      navbarRetraida: 1,
+      tema: 0
     };
   },
   methods: {
@@ -98,17 +96,24 @@ export default Vue.extend({
           }
           this.$snotify.success(response.data.mensagem);
         })
-        .catch((reason: AxiosError) => {
+        .catch(() => {
           this.$snotify.error("HOUVE UMA FALHA AO SE CONECTAR COM O SERVIDOR!");
         });
     }
   },
   mounted() {
     if (localStorage.getItem("navbar") === null) {
-      localStorage.setItem("navbar", "0");
+      localStorage.setItem("navbar", "1"); //Padrão retraída
+    } else {
+      this.navbarRetraida = parseInt(
+        localStorage.getItem("navbar") as string
+      ) as number;
     }
+
     if (localStorage.getItem("tema") === null) {
       localStorage.setItem("tema", "0");
+    } else {
+      this.tema = parseInt(localStorage.getItem("tema") as string) as number;
     }
   }
 });

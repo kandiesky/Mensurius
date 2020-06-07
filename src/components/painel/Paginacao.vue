@@ -25,7 +25,7 @@ import Vue from "vue";
 import { SnotifyToast } from "vue-snotify";
 
 export default Vue.extend({
-  props: ["paginas"],
+  props: ["paginas", "estado", "questionarios"],
   methods: {
     trocar(direcao: string) {
       if (direcao == "ir") {

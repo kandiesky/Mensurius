@@ -9,6 +9,8 @@
       <h2>{{ questionario.nome }}</h2>
       <small>Votos: {{ questionario.votosTotal }}</small>
       <br />
+      <small>Código: {{ questionario.codigo }}</small>
+      <br />
       <small>Prazo de Vencimento: {{ questionario.validade }}</small>
       <div :id="`menu-${questionario.codigo}`">
         <button class="dropdown-menu">
@@ -25,31 +27,34 @@
             <icon icon="info-circle" />
             <span>Informações</span>
           </router-link>
-          <!-- <li>
+          <li @click="fecharPrazo(questionario.codigo)">
             <icon icon="calendar-check" />
             <span>Fechar Prazo</span>
-          </li>-->
-          <li @click="deletar(questionario.codigo)">
+          </li>
+          <li @click="deletar(index, questionario.codigo)">
             <icon icon="trash-alt" />
             <span>Deletar</span>
           </li>
         </ul>
       </div>
       <qr
-        :text="questionario.codigo"
+        :text="`www.okituke.com.br/mensurius/${questionario.codigo}`"
         :size="150"
         class="qr"
-        @click="baixarQr(index)"
+        @click="baixarQr(index, questionario.codigo)"
         :ref="index"
       />
       <div class="wrapper">
-        <button @click="copiarLink(index)" :ref="`cl-${index}`">
+        <button
+          @click="copiarLink(index, questionario.codigo)"
+          :ref="`cl-${index}`"
+        >
           Copiar Link
         </button>
-        <button @click="baixarQr(index)">Baixar QR</button>
+        <button @click="baixarQr(index, questionario.codigo)">Baixar QR</button>
       </div>
       <div v-if="questionario.midia.length > 0" class="wrapper">
-        <img :src="questionario.midia.length" class="midia" />
+        <img :src="questionario.midia" class="midia" />
       </div>
       <h3>{{ questionario.pergunta }}</h3>
       <div class="flex container container-questionario">
@@ -98,9 +103,10 @@ import Vue from "vue";
 import { SnotifyToast } from "vue-snotify";
 import size from "lodash/size";
 import Paginacao from "@/components/painel/Paginacao.vue";
+import { AxiosResponse, AxiosError } from "axios";
 
 export default Vue.extend({
-  props: ["questionarios", "paginas"],
+  props: ["questionarios", "paginas", "estado"],
   data() {
     return {
       dataQr: []
@@ -121,9 +127,9 @@ export default Vue.extend({
       download.click();
       download.remove();
     },
-    copiarLink(index: string) {
+    copiarLink(index: string, codigo: string) {
       const container = (this.$refs[`cl-${index}`] as any)[0] as HTMLElement;
-      if (this.$copyText(`www.okituke.com.br/mensurius/${index}`, container)) {
+      if (this.$copyText(`www.okituke.com.br/mensurius/${codigo}`, container)) {
         this.$snotify.success("COPIADO COM SUCESSO!");
       } else {
         this.$snotify.error(
@@ -131,7 +137,7 @@ export default Vue.extend({
         );
       }
     },
-    deletar(index: string) {
+    deletar(index: string, codigo: string) {
       this.$snotify.prompt(
         "DELETAR QUESTIONÁRIO",
         'VOCÊ TEM CERTEZA QUE DESEJA DELETAR ESTE QUESTIONÁRIO? ESTE PROCESSO NÃO TEM VOLTA. DIGITE "SIM" NA CAIXA ABAIXO E CLIQUE EM CONFIRMAR CASO DESEJE.',
@@ -142,10 +148,84 @@ export default Vue.extend({
               action: (toast: SnotifyToast) => {
                 const resposta = toast.value;
                 if (resposta.toLowerCase() === "sim") {
-                  this.$delete(this.questionarios, index);
+                  const formData = new FormData();
+                  formData.append("id", this.estado.sessao.id);
+                  formData.append("chave", this.estado.sessao.chave);
+                  formData.append("codigo", codigo);
+
+                  this.$http({
+                    method: "POST",
+                    url: "/mensurius/api/deletar.questionario.php",
+                    data: formData
+                  })
+                    .then((response: AxiosResponse) => {
+                      if (response.data.resultado) {
+                        this.$delete(this.questionarios, index);
+                        this.$snotify.remove(toast.id as string);
+                        this.$snotify.success("DELETADO COM SUCESSO!");
+                        this.$root.$emit("recarregar");
+                      } else {
+                        this.$snotify.error(response.data.mensagem);
+                      }
+                    })
+                    .catch((reason: AxiosError) => {
+                      this.$snotify.error(
+                        `HOUVE UM ERRO AO DELETAR: ${reason}`
+                      );
+                    });
+                } else {
+                  this.$snotify.error(
+                    `A AÇÃO FOI CANCELADA. A RESPOSTA "${resposta}" ESTAVA INCORRETA`
+                  );
                   this.$snotify.remove(toast.id as string);
-                  this.$snotify.success("DELETADO COM SUCESSO!");
-                  this.$root.$emit("recarregar");
+                }
+              },
+              bold: true
+            },
+            {
+              text: "CANCELAR",
+              action: (toast: SnotifyToast) => {
+                this.$snotify.remove(toast.id as string);
+              }
+            }
+          ],
+          placeholder: 'DIGITE "SIM" E CONFIRME PARA PROSSEGUIR'
+        }
+      );
+    },
+    fecharPrazo(codigo: string) {
+      this.$snotify.prompt(
+        "FECHAR PRAZO",
+        'VOCÊ TEM CERTEZA QUE DESEJA FECHAR O PRAZO? NINGUÉM MAIS SERÁ CAPAZ DE VOTAR NESTE QUESTIONÁRIO. DIGITE "SIM" NA CAIXA ABAIXO E CLIQUE EM CONFIRMAR CASO DESEJE.',
+        {
+          buttons: [
+            {
+              text: "CONFIRMAR",
+              action: (toast: SnotifyToast) => {
+                const resposta = toast.value;
+                if (resposta.toLowerCase() === "sim") {
+                  const formData = new FormData();
+                  formData.append("id", this.estado.sessao.id);
+                  formData.append("chave", this.estado.sessao.chave);
+                  formData.append("codigo", codigo);
+
+                  this.$http({
+                    method: "POST",
+                    url: "/mensurius/api/fechar_prazo.questionario.php",
+                    data: formData
+                  })
+                    .then((response: AxiosResponse) => {
+                      if (response.data.resultado) {
+                        this.$snotify.remove(toast.id as string);
+                        this.$snotify.success("FECHADO COM SUCESSO!");
+                        this.$root.$emit("recarregar");
+                      } else {
+                        this.$snotify.error(response.data.mensagem);
+                      }
+                    })
+                    .catch((reason: AxiosError) => {
+                      this.$snotify.error(`HOUVE UM ERRO: ${reason}`);
+                    });
                 } else {
                   this.$snotify.error(
                     `A AÇÃO FOI CANCELADA. A RESPOSTA "${resposta}" ESTAVA INCORRETA`

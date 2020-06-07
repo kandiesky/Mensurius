@@ -17,7 +17,7 @@
 
 <script lang="ts">
 import Vue from "vue";
-import { AxiosResponse, AxiosError } from "axios";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
   props: ["estado"],
@@ -52,7 +52,7 @@ export default Vue.extend({
             query: { qid: this.codigo }
           });
         })
-        .catch((reason: AxiosError) => {
+        .catch(() => {
           this.$snotify.error(
             "NÃO FOI POSSÍVEL SE CONECTAR COM O SERVIDOR. TENTE NOVAMENTE MAIS TARDE."
           );

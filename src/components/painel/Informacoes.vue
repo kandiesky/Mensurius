@@ -1,5 +1,5 @@
 <template>
-  <div class="wrapper" v-if="tamanho(questionario) > 0">
+  <div class="wrapper" v-if="carregado">
     <div class="card card-lg flex-center">
       <button type="button" class="arrow-menu" @click="voltar()">
         <icon icon="arrow-alt-circle-left" size="2x" />
@@ -16,7 +16,7 @@
         Pergunta: {{ questionario.pergunta }}
       </h3>
       <div v-if="questionario.midia.length > 0" class="wrapper">
-        <img :src="questionario.midia.length" class="midia" />
+        <img :src="questionario.midia" class="midia" />
       </div>
       <div class="flex container container-questionario">
         <div
@@ -25,12 +25,14 @@
           :key="index"
         >
           <span>
-            {{ resposta.resposta }}
+            {{ resposta.texto }}
             <br />
             {{
-              ((resposta.contagem / questionario.quantidadeRespostas) * 100)
-                .toString()
-                .slice(0, 5)
+              resposta.contagem != 0
+                ? ((resposta.contagem / questionario.votosTotal) * 100)
+                    .toString()
+                    .slice(0, 5)
+                : "0"
             }}%
           </span>
           <div class="progresso">
@@ -50,11 +52,11 @@
       </div>
       <chart
         :data="{
-          labels: questionario.grafico.labels,
+          labels: labels,
           datasets: [
             {
               label: 'Número de Votos Relacionados',
-              data: questionario.grafico.dataset,
+              data: dataset,
               backgroundColor: [
                 'rgba(255, 99, 132, 0.9)',
                 'rgba(54, 162, 235, 0.9)',
@@ -69,7 +71,18 @@
                 'rgba(153, 0, 255, 0.9)',
                 'rgba(204, 0, 204, 0.9)',
                 'rgba(255, 102, 0, 0.9)',
-                'rgba(255, 159, 64, 0.9)'
+                'rgba(255, 159, 64, 0.9)',
+                'rgba(255, 99, 132, 0.9)',
+                'rgba(54, 162, 235, 0.9)',
+                'rgba(255, 206, 86, 0.9)',
+                'rgba(75, 192, 192, 0.9)',
+                'rgba(153, 102, 255, 0.9)',
+                'rgba(0, 51, 102, 0.9)',
+                'rgba(102, 102, 153, 0.9)',
+                'rgba(102, 0, 204, 0.9)',
+                'rgba(153, 0, 255, 0.9)',
+                'rgba(204, 0, 204, 0.9)',
+                'rgba(255, 102, 0, 0.9)'
               ],
               borderColor: [
                 'rgba(255, 255, 255, 1)',
@@ -85,9 +98,20 @@
                 'rgba(255, 255, 255, 1)',
                 'rgba(255, 255, 255, 1)',
                 'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
+                'rgba(255, 255, 255, 1)',
                 'rgba(255, 255, 255, 1)'
               ],
-              borderWidth: 1
+              borderWidth: 2
             }
           ]
         }"
@@ -112,25 +136,45 @@
 
 <script lang="ts">
 import Vue from "vue";
-import size from "lodash/size";
+import { AxiosResponse } from "axios";
 
 export default Vue.extend({
-  props: ["questionarios", "paginas"],
+  props: ["questionarios", "paginas", "estado"],
   methods: {
-    tamanho(obj: {} | []) {
-      return size(obj);
-    },
     voltar() {
       this.$router.go(-1);
     }
   },
   data() {
     return {
-      questionario: this.questionarios[this.$route.query.qid as string]
+      questionario: {},
+      labels: [],
+      dataset: [],
+      carregado: false
     };
   },
   components: {
     chart: () => import("@/components/painel/externos/Chart.vue")
+  },
+  mounted() {
+    this.$http({
+      method: "GET",
+      url: "/mensurius/api/informacoes.questionario.php",
+      params: {
+        qid: this.$route.query.qid,
+        id: this.estado.sessao.id,
+        chave: this.estado.sessao.chave
+      }
+    }).then((response: AxiosResponse) => {
+      if (response.data.resultado) {
+        this.dataset = response.data.resposta.dataset;
+        this.labels = response.data.resposta.labels;
+        this.questionario = response.data.resposta.questionario;
+        this.carregado = true;
+      } else {
+        this.$snotify.error(response.data.mensagem);
+      }
+    });
   }
 });
 </script>
