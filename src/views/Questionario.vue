@@ -31,7 +31,15 @@
         />
         <label :for="`resposta-${index}`">{{ resposta.texto }}</label>
       </div>
+      <a
+        v-if="this.votado && questionario.link.length > 0"
+        :href="questionario.link"
+        target="_top"
+        class="btn btn-lg mt-2"
+        >PRÓXIMO</a
+      >
       <button
+        v-else
         :disabled="this.selecionado == -1"
         type="submit"
         class="btn-lg mt-2"
@@ -53,6 +61,7 @@ export default Vue.extend({
   data() {
     return {
       selecionado: -1,
+      votado: false,
       carregado: false,
       questionario: {} as any
     };
@@ -87,7 +96,7 @@ export default Vue.extend({
   },
   methods: {
     votar: function() {
-      if (this.selecionado < 0 && this.selecionado > 5) {
+      if (this.selecionado < 0 && this.selecionado > 10) {
         this.$snotify.warning("NENHUM VALOR FOI SELECIONADO!", "AVISO");
         return;
       }
@@ -113,9 +122,12 @@ export default Vue.extend({
           if (response.data.resultado) {
             this.$snotify.success(response.data.mensagem);
             localStorage.setItem(this.questionario.codigo as string, "true");
-            setTimeout(() => {
-              this.$router.push("/");
-            }, 1200);
+            this.votado = true;
+            if (this.questionario.link.length == 0) {
+              setTimeout(() => {
+                this.$router.push("/");
+              }, 1200);
+            }
           } else {
             this.$snotify.error(response.data.mensagem);
           }

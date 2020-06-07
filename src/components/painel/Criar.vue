@@ -23,6 +23,12 @@
         >
       </div>
       <div class="card-form-group">
+        <input type="text" id="link" v-model="link" />
+        <label for="link" :class="[link.length > 0 ? 'preenchido' : '']"
+          >LINK</label
+        >
+      </div>
+      <div class="card-form-group">
         <input type="date" id="vencimento" v-model="vencimento" />
         <label for="vencimento" class="preenchido">DATA DE VENCIMENTO*</label>
       </div>
@@ -72,9 +78,9 @@
         type="button"
         class="btn-lg"
         @click="adicionarResposta()"
-        v-if="tamanho(respostas) < 5"
+        v-if="tamanho(respostas) < 10"
       >
-        ADICIONAR RESPOSTA ({{ tamanho(respostas) }}/5)
+        ADICIONAR RESPOSTA ({{ tamanho(respostas) }}/10)
       </button>
       <div class="card-form-group"></div>
       <h3>FINALIZAR</h3>
@@ -94,6 +100,7 @@ export default Vue.extend({
     return {
       nome: "",
       pergunta: "",
+      link: "",
       vencimento: "",
       respostas: [{ texto: "" }, { texto: "" }],
       midia: "",
@@ -160,6 +167,7 @@ export default Vue.extend({
       formData.append("pergunta", this.pergunta);
       formData.append("vencimento", this.vencimento);
       formData.append("respostas", JSON.stringify(this.respostas));
+      formData.append("link", this.link);
       formData.append("midia", (inputMidia as any).files[0] as Blob, "midia"); //Eu odeio typescript
 
       this.$http({

@@ -178,17 +178,17 @@ body {
 }
 
 .flex-column {
-    flex-flow: column;
+    flex-flow: column !important;
 }
 
 .flex-center {
-    justify-content: center;
-    align-items: center;
+    justify-content: center !important;
+    align-items: center !important;
 }
 
 .flex {
     display: flex;
-
+    flex-flow: row wrap;
 }
 
 .card {
@@ -450,6 +450,7 @@ body {
 button,
 .btn {
     display: inline-block;
+    text-decoration: none;
     cursor: pointer;
     word-wrap: break-word;
     color: var(--complementar);
