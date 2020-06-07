@@ -41,7 +41,7 @@
         :text="`www.okituke.com.br/mensurius/${questionario.codigo}`"
         :size="150"
         class="qr"
-        @click="baixarQr(index, questionario.codigo)"
+        @click="baixarQr(index, questionario.nome)"
         :ref="index"
       />
       <div class="wrapper">
@@ -51,7 +51,7 @@
         >
           Copiar Link
         </button>
-        <button @click="baixarQr(index, questionario.codigo)">Baixar QR</button>
+        <button @click="baixarQr(index, questionario.nome)">Baixar QR</button>
       </div>
       <div v-if="questionario.midia.length > 0" class="wrapper">
         <img :src="questionario.midia" class="midia" />
@@ -116,14 +116,14 @@ export default Vue.extend({
     tamanho(objeto = {} || []) {
       return size(objeto);
     },
-    baixarQr(index: string) {
+    baixarQr(index: string, nome: string) {
       const el = (this.$refs[index] as any)[0].$el as HTMLImageElement;
       const data = el.src as string;
       const download = document.createElement("a");
       el.appendChild(download);
       download.style.display = "none";
       download.href = data;
-      download.download = `QR_${index}`;
+      download.download = `QR_${nome}`;
       download.click();
       download.remove();
     },

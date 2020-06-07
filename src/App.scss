@@ -121,6 +121,10 @@ body {
     height: 100%;
     z-index: 2;
 
+    #avisoRetracao{
+        display: none;
+    }
+
     a {
         display: block;
     }
@@ -518,6 +522,10 @@ footer {
         z-index: 2;
         transition: height 0.4s ease;
 
+        #avisoRetracao{
+            display: inline-block;
+        }
+
         a {
             margin-right: 0;
             display: block;
@@ -528,6 +536,10 @@ footer {
             width: 100%;
 
             .sub {
+                display: none;
+            }
+
+            #avisoRetracao{
                 display: none;
             }
 

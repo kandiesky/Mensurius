@@ -15,6 +15,7 @@
           icon="angle-double-left"
           :transform="{ rotate: navbarRetraida ? 180 : 0 }"
         />
+        <span id="avisoRetracao">&nbsp; Encolher Menu</span>
       </a>
       <a @click="mudarTema()" id="tema">
         <icon v-if="tema == 0" icon="sun" />
