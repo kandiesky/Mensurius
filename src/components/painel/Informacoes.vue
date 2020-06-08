@@ -7,7 +7,7 @@
       <h3>
         {{ questionario.nome }}
         <br />
-        Quantidade Total de Votos: {{ questionario.quantidadeRespostas }}
+        Quantidade Total de Votos: {{ questionario.votosTotal }}
         <br />
         Prazo de Vencimento: {{ questionario.validade }}
         <br />
@@ -40,9 +40,7 @@
               class="preenchimento-progresso"
               :style="{
                 height:
-                  ((resposta.contagem / questionario.quantidadeRespostas) *
-                    100) /
-                    2 +
+                  ((resposta.contagem / questionario.votosTotal) * 100) / 2 +
                   'px'
               }"
             />
@@ -157,6 +155,10 @@ export default Vue.extend({
     chart: () => import("@/components/painel/externos/Chart.vue")
   },
   mounted() {
+    if (!this.$route.query.qid || this.$route.query.qid.length == 0) {
+      this.$router.push("/login");
+    }
+
     this.$http({
       method: "GET",
       url: "/mensurius/api/informacoes.questionario.php",

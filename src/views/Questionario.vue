@@ -5,11 +5,12 @@
       class="card card-lg card-form flex-center-fix"
       @submit.prevent="votar()"
     >
-      <h1>{{ questionario.pergunta }}</h1>
-      <small>Validade: {{ questionario.validade }}</small>
       <div v-if="questionario.midia.length > 0">
         <img :src="questionario.midia" class="midia" />
       </div>
+      <h1>{{ questionario.pergunta }}</h1>
+      <small>Validade: {{ questionario.validade }}</small>
+
       <h2 class="mt-2">
         {{
           this.selecionado == -1
@@ -36,7 +37,7 @@
         :href="questionario.link"
         target="_top"
         class="btn btn-lg mt-2"
-        >PRÓXIMO</a
+        >ACESSE MAIS</a
       >
       <button
         v-else
@@ -78,8 +79,10 @@ export default Vue.extend({
         if (response.data.resultado) {
           this.questionario = response.data.resposta;
           if (localStorage.getItem(this.questionario.codigo) == "true") {
-            this.$snotify.info("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
-            this.$router.push("/");
+            this.$snotify.info(
+              "VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO! VOLTE PARA A TELA INICIAL CASO QUEIRA VOTAR EM OUTRO."
+            );
+            //this.$router.push("/");
             return;
           }
           this.carregado = true;
