@@ -44,7 +44,7 @@
         @click="baixarQr(index, questionario.nome)"
         :ref="index"
       />
-      <div class="wrapper">
+      <div class="wrapper mb-2 mt-2">
         <button
           @click="copiarLink(index, questionario.codigo)"
           :ref="`cl-${index}`"

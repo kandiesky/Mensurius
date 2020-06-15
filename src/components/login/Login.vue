@@ -52,9 +52,7 @@ export default Vue.extend({
         .post("/mensurius/api/login.php", data)
         .then((response: AxiosResponse) => {
           if (response.data.resultado) {
-            this.$snotify.success(
-              "Login realizado com sucesso! Redirecionando para a sua dashboard."
-            );
+            this.$snotify.success(response.data.mensagem);
             this.estado.sessao = response.data.resposta.sessao;
             this.$router.push("/painel");
           } else {
@@ -62,9 +60,7 @@ export default Vue.extend({
           }
         })
         .catch((reason: AxiosError) => {
-          this.$snotify.error(
-            `Houve um problema ao se conectar com o servidor: ${reason}`
-          );
+          this.$snotify.error(`FALHA AO SE CONECTAR COM SERVIDOR: ${reason}`);
         });
     }
   },

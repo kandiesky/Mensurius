@@ -27,7 +27,8 @@ import {
   faPlusSquare,
   faSignOutAlt,
   faUserCheck,
-  faQrcode
+  faQrcode,
+  faClock
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -53,7 +54,8 @@ library.add(
   faCaretLeft,
   faArrowAltCircleLeft,
   faIdCardAlt,
-  faQrcode
+  faQrcode,
+  faClock
 );
 
 Vue.component("icon", FontAwesomeIcon);
@@ -75,6 +77,8 @@ Vue.use(Snotify, {
 //import vueQr from "vue-qr";
 Vue.component("qr", () => import("vue-qr"));
 
+//import colorpicker
+//Vue.component("color-picker", () => import("@caohenghu/vue-colorpicker"))
 //Vue clipboard
 import VueClipboard from "vue-clipboard2";
 Vue.use(VueClipboard);
@@ -102,7 +106,8 @@ new Vue({
         chave: "" as string, //Chave do usuário da sessão. É gerado via php com alguns parâmetros
         relacionado:
           relacionado?.length && relacionado != "" ? relacionado : "3"
-      }
+      },
+      timing: 30000
     }
   },
   mounted() {

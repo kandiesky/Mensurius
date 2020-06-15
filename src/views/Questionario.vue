@@ -5,42 +5,52 @@
       class="card card-lg card-form flex-center-fix"
       @submit.prevent="votar()"
     >
+      <router-link v-show="this.votado" tag="button" class="arrow-menu" to="/">
+        <icon icon="arrow-alt-circle-left" size="2x" />
+      </router-link>
       <div v-if="questionario.midia.length > 0">
         <img :src="questionario.midia" class="midia" />
       </div>
       <h1>{{ questionario.pergunta }}</h1>
       <small>Validade: {{ questionario.validade }}</small>
-
-      <h2 class="mt-2">
+      <h2 class="mt-2" v-if="!this.votado">
         {{
           this.selecionado == -1
             ? "Selecione uma resposta para continuar"
             : "Clique em salvar para finalizar!"
         }}
       </h2>
-      <div
-        class="card-respostas flex"
-        v-for="(resposta, index) in questionario.respostas"
-        :key="index"
+      <h2
+        class="mt-2"
+        v-if="this.votado && questionario.agradecimento.length > 0"
       >
-        <input
-          type="radio"
-          v-model="selecionado"
-          :value="index"
-          name="resposta"
-          :id="`resposta-${index}`"
-        />
-        <label :for="`resposta-${index}`">{{ resposta.texto }}</label>
-      </div>
+        {{ questionario.agradecimento }}
+      </h2>
       <a
         v-if="this.votado && questionario.link.length > 0"
         :href="questionario.link"
         target="_top"
-        class="btn btn-lg mt-2"
+        class="btn btn-lg mb-2 mt-2"
         >ACESSE MAIS</a
       >
+      <div v-show="!this.votado" class="wrapper" id="respostas">
+        <div
+          class="card-respostas flex"
+          v-for="(resposta, index) in questionario.respostas"
+          :key="index"
+        >
+          <input
+            type="radio"
+            v-model="selecionado"
+            :value="index"
+            name="resposta"
+            :id="`resposta-${index}`"
+          />
+          <label :for="`resposta-${index}`">{{ resposta.texto }}</label>
+        </div>
+      </div>
       <button
-        v-else
+        v-if="!this.votado"
         :disabled="this.selecionado == -1"
         type="submit"
         class="btn-lg mt-2"
@@ -82,8 +92,8 @@ export default Vue.extend({
             this.$snotify.info(
               "VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO! VOLTE PARA A TELA INICIAL CASO QUEIRA VOTAR EM OUTRO."
             );
+            this.votado = true;
             //this.$router.push("/");
-            return;
           }
           this.carregado = true;
           this.$snotify.success("QUESTIONÁRIO CARREGADO COM SUCESSO!");
@@ -106,7 +116,8 @@ export default Vue.extend({
 
       if (localStorage.getItem(this.questionario.codigo) == "true") {
         this.$snotify.info("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
-        this.$router.push("/");
+        this.votado = true;
+        //this.$router.push("/");
         return;
       }
 
@@ -126,11 +137,11 @@ export default Vue.extend({
             this.$snotify.success(response.data.mensagem);
             localStorage.setItem(this.questionario.codigo as string, "true");
             this.votado = true;
-            if (this.questionario.link.length == 0) {
-              setTimeout(() => {
-                this.$router.push("/");
-              }, 1200);
-            }
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: "smooth"
+            });
           } else {
             this.$snotify.error(response.data.mensagem);
           }

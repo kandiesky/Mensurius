@@ -29,6 +29,14 @@
         >
       </div>
       <div class="card-form-group">
+        <input type="text" id="agradecimento" v-model="agradecimento" />
+        <label
+          for="agradecimento"
+          :class="[agradecimento.length > 0 ? 'preenchido' : '']"
+          >TEXTO AGRADECIMENTO</label
+        >
+      </div>
+      <div class="card-form-group">
         <input type="date" id="vencimento" v-model="vencimento" />
         <label for="vencimento" class="preenchido">DATA DE VENCIMENTO*</label>
       </div>
@@ -101,6 +109,7 @@ export default Vue.extend({
       nome: "",
       pergunta: "",
       link: "",
+      agradecimento: "",
       vencimento: "",
       respostas: [{ texto: "" }, { texto: "" }],
       midia: "",
@@ -168,6 +177,7 @@ export default Vue.extend({
       formData.append("vencimento", this.vencimento);
       formData.append("respostas", JSON.stringify(this.respostas));
       formData.append("link", this.link);
+      formData.append("agradecimento", this.agradecimento);
       formData.append("midia", (inputMidia as any).files[0] as Blob, "midia"); //Eu odeio typescript
 
       this.$http({

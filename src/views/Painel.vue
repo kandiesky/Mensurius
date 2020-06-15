@@ -17,6 +17,8 @@ export default Vue.extend({
   props: ["estado"],
   data() {
     return {
+      carregado: false,
+      timer: 0,
       questionarios: {},
       paginas: {
         total: 1, // -1 faz o texto de adicionar questionário ser ativado
@@ -41,8 +43,18 @@ export default Vue.extend({
             this.$snotify.error(response.data.mensagem);
             return;
           }
+
+          if (this.carregado && this.estado.sessao) {
+            this.$snotify.info("QUESTIONÁRIOS ATUALIZADOS.");
+          }
+
           this.questionarios = response.data.resposta.questionarios;
           this.paginas = response.data.resposta.paginas;
+          this.carregado = true;
+          clearTimeout(this.timer);
+          this.timer = setTimeout(() => {
+            this.carregarQuestionarios();
+          }, this.estado.timing);
         })
         .catch((reason: AxiosError) => {
           this.$snotify.error(
