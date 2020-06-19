@@ -11,7 +11,9 @@
       <div v-if="questionario.midia.length > 0">
         <img :src="questionario.midia" class="midia" />
       </div>
-      <h1>{{ questionario.pergunta }}</h1>
+      <h1 class="destaque" v-show="!this.votado">
+        {{ questionario.pergunta }}
+      </h1>
       <small>Validade: {{ questionario.validade }}</small>
       <h2 class="mt-2" v-if="!this.votado">
         {{
@@ -21,18 +23,21 @@
         }}
       </h2>
       <h2
-        class="mt-2"
+        class="mt-2 destaque"
         v-if="this.votado && questionario.agradecimento.length > 0"
       >
         {{ questionario.agradecimento }}
       </h2>
-      <a
-        v-if="this.votado && questionario.link.length > 0"
-        :href="questionario.link"
-        target="_top"
-        class="btn btn-lg mb-2 mt-2"
-        >ACESSE MAIS</a
-      >
+      <div class="wrapper" v-if="this.votado">
+        <a
+          v-for="(link, index) in questionario.link"
+          :key="index"
+          :href="link.link"
+          target="_top"
+          class="btn btn-lg mb-2 mt-2"
+          >{{ link.titulo }}</a
+        >
+      </div>
       <div v-show="!this.votado" class="wrapper" id="respostas">
         <div
           class="card-respostas flex"

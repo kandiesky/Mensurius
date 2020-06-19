@@ -22,19 +22,10 @@
         <icon v-else icon="moon" />
         <span>&nbsp; Modo {{ tema == 0 ? "Claro" : "Noturno" }}</span>
       </a>
-      <a
-        @click="mudarTimingAtualizacao()"
-        id="timing"
-        v-if="this.estado.sessao.id"
-      >
-        <icon icon="clock" />
+      <a @click="atualizarQuestionarios()" v-if="this.estado.sessao.id">
+        <icon icon="redo" />
         <span>
-          &nbsp;
-          {{
-            this.estado.timing == 999999999
-              ? "Desativado"
-              : `Atualizar a cada: ${this.estado.timing / 1000} segundos`
-          }}
+          Atualizar Questionários
         </span>
       </a>
       <router-link to="/" v-if="!estado.sessao.id">
@@ -97,18 +88,9 @@ export default Vue.extend({
       this.navbarRetraida = this.navbarRetraida ? 0 : 1;
       localStorage.setItem("navbar", `${this.navbarRetraida}`);
     },
-    mudarTimingAtualizacao() {
-      if (this.estado.timing >= 150000 && this.estado.timing != 999999999) {
-        this.estado.timing = 999999999;
-      } else if (this.estado.timing == 999999999) {
-        this.$snotify.info(
-          "AS ATUALIZAÇÕES FORAM REATIVADAS MAS SÓ TERÃO EFEITO APÓS RECARREGAR A PÁGINA..."
-        );
-        this.estado.timing = 30000;
-      } else {
-        this.estado.timing += 15000;
-      }
-      localStorage.setItem("timing", `${this.estado.timing}`);
+    atualizarQuestionarios() {
+      this.$snotify.info("QUESTIONÁRIOS ATUALIZADOS.", "", { timeout: 500 });
+      this.$root.$emit("recarregar");
     },
     sair() {
       this.$http

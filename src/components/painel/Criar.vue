@@ -5,7 +5,7 @@
       <small>*: obrigatório</small>
       <hr />
       <div class="card-form-group">
-        <input type="text" id="nome" v-model="nome" />
+        <input type="text" id="nome" required v-model="nome" />
         <label for="nome" :class="[nome.length > 0 ? 'preenchido' : '']"
           >NOME DO QUESTIONÁRIO*</label
         >
@@ -17,15 +17,9 @@
         >
       </div>
       <div class="card-form-group">
-        <input type="text" id="pergunta" v-model="pergunta" />
+        <input type="text" id="pergunta" required v-model="pergunta" />
         <label for="pergunta" :class="[pergunta.length > 0 ? 'preenchido' : '']"
           >PERGUNTA*</label
-        >
-      </div>
-      <div class="card-form-group">
-        <input type="text" id="link" v-model="link" />
-        <label for="link" :class="[link.length > 0 ? 'preenchido' : '']"
-          >LINK</label
         >
       </div>
       <div class="card-form-group">
@@ -36,16 +30,60 @@
           >TEXTO AGRADECIMENTO</label
         >
       </div>
-      <div class="card-form-group">
+      <div class="card-form-group" v-for="(link, index) in links" :key="index">
+        <div class="card-form-group-dual">
+          <div class="metade">
+            <input
+              type="text"
+              v-model="link.titulo"
+              :id="`link-titulo-${index}`"
+            />
+            <label
+              :for="`link-titulo-${index}`"
+              :class="[link.titulo.length > 0 ? 'preenchido' : '']"
+              >Titulo {{ index + 1 }}</label
+            >
+          </div>
+          <div class="metade">
+            <input
+              type="url"
+              v-model="link.link"
+              :id="`link-conteudo-${index}`"
+            />
+            <label
+              :for="`link-conteudo-${index}`"
+              :class="[link.link.length > 0 ? 'preenchido' : '']"
+              >Link {{ index + 1 }}</label
+            >
+          </div>
+        </div>
+        <button
+          title="Clique aqui para apagar este link"
+          type="button"
+          @click="removerLink(index)"
+        >
+          <icon icon="trash-alt" />
+        </button>
+      </div>
+      <button
+        type="button"
+        class="btn-lg"
+        @click="adicionarLink()"
+        v-if="tamanho(links) < 5"
+      >
+        ADICIONAR LINK ({{ tamanho(links) }}/5)
+      </button>
+      <div class="card-form-group mt-2">
         <input type="date" id="vencimento" v-model="vencimento" />
         <label for="vencimento" class="preenchido">DATA DE VENCIMENTO*</label>
       </div>
-      <h3>MÍDIA</h3>
+      <h3>MÍDIA*</h3>
       <div class="card-form-group">
         <input
           accept=".jpg, .jpeg, .png, .webp"
           type="file"
           id="midia"
+          required
           ref="midia"
           @change="preverMidia()"
         />
@@ -108,7 +146,7 @@ export default Vue.extend({
     return {
       nome: "",
       pergunta: "",
-      link: "",
+      links: [] as any,
       agradecimento: "",
       vencimento: "",
       respostas: [{ texto: "" }, { texto: "" }],
@@ -138,7 +176,7 @@ export default Vue.extend({
       midia.onload = () => {
         if (
           midia.result &&
-          midia.result.toString().search(/data:image/i) === -1
+          midia.result.toString().indexOf("data:image") === -1
         ) {
           this.$snotify.error("O arquivo não é uma imagem!", "ERRO", {
             timeout: 8000
@@ -151,8 +189,14 @@ export default Vue.extend({
     adicionarResposta() {
       this.respostas.push({ texto: "" });
     },
+    adicionarLink() {
+      this.links.push({ link: "", titulo: "" });
+    },
     removerResposta(index: number) {
       this.$delete(this.respostas, index);
+    },
+    removerLink(index: number) {
+      this.$delete(this.links, index);
     },
     removerMidia() {
       (this.$refs.midia as HTMLInputElement).value = "";
@@ -176,7 +220,7 @@ export default Vue.extend({
       formData.append("pergunta", this.pergunta);
       formData.append("vencimento", this.vencimento);
       formData.append("respostas", JSON.stringify(this.respostas));
-      formData.append("link", this.link);
+      formData.append("links", JSON.stringify(this.links));
       formData.append("agradecimento", this.agradecimento);
       formData.append("midia", (inputMidia as any).files[0] as Blob, "midia"); //Eu odeio typescript
 

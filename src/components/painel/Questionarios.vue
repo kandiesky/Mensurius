@@ -11,7 +11,9 @@
       <br />
       <small>Código: {{ questionario.codigo }}</small>
       <br />
-      <small>Prazo de Vencimento: {{ questionario.validade }}</small>
+      <div class="wrapper" v-if="questionario.validade !== '31/12/1969'">
+        <small>Prazo de Vencimento: {{ questionario.validade }}</small>
+      </div>
       <div :id="`menu-${questionario.codigo}`">
         <button class="dropdown-menu">
           <icon icon="ellipsis-v" />
@@ -56,7 +58,7 @@
       <div v-if="questionario.midia.length > 0" class="wrapper">
         <img :src="questionario.midia" class="midia" />
       </div>
-      <h3>{{ questionario.pergunta }}</h3>
+      <h3 class="destaque">{{ questionario.pergunta }}</h3>
       <div class="flex container container-questionario">
         <div
           class="flex flex-column flex-center votos-questionario"

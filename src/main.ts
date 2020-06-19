@@ -28,7 +28,7 @@ import {
   faSignOutAlt,
   faUserCheck,
   faQrcode,
-  faClock
+  faRedo
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
 
@@ -55,7 +55,7 @@ library.add(
   faArrowAltCircleLeft,
   faIdCardAlt,
   faQrcode,
-  faClock
+  faRedo
 );
 
 Vue.component("icon", FontAwesomeIcon);
@@ -89,6 +89,7 @@ const mainEl = document.getElementById("app") as Element,
 
 Vue.config.productionTip = false;
 Vue.config.performance = true;
+Vue.config.devtools = false;
 
 new Vue({
   el: mainEl,
@@ -106,8 +107,7 @@ new Vue({
         chave: "" as string, //Chave do usuário da sessão. É gerado via php com alguns parâmetros
         relacionado:
           relacionado?.length && relacionado != "" ? relacionado : "3"
-      },
-      timing: 30000
+      }
     }
   },
   mounted() {

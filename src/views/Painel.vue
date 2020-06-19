@@ -18,7 +18,6 @@ export default Vue.extend({
   data() {
     return {
       carregado: false,
-      timer: 0,
       questionarios: {},
       paginas: {
         total: 1, // -1 faz o texto de adicionar questionário ser ativado
@@ -44,17 +43,14 @@ export default Vue.extend({
             return;
           }
 
-          if (this.carregado && this.estado.sessao) {
-            this.$snotify.info("QUESTIONÁRIOS ATUALIZADOS.");
-          }
+          console.log(
+            "%cUPDATE.",
+            "padding: 5px;background:orange;color:white;"
+          );
 
           this.questionarios = response.data.resposta.questionarios;
           this.paginas = response.data.resposta.paginas;
           this.carregado = true;
-          clearTimeout(this.timer);
-          this.timer = setTimeout(() => {
-            this.carregarQuestionarios();
-          }, this.estado.timing);
         })
         .catch((reason: AxiosError) => {
           this.$snotify.error(

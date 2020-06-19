@@ -12,6 +12,10 @@
     --base: #0083d0;
     --complementar: #e1e0ea;
     --icon: #0e96fd;
+
+    .destaque {
+        color: #06d6a0;
+    }
 }
 
 .tema-escuro {
@@ -21,6 +25,10 @@
     --base: #06d6a0;
     --complementar: #0b2737;
     --icon: #1a936f;
+
+    .destaque {
+        color: #0e96fd;
+    }
 }
 
 %transicao {
@@ -121,7 +129,7 @@ body {
     height: 100%;
     z-index: 2;
 
-    #avisoRetracao{
+    #avisoRetracao {
         display: none;
     }
 
@@ -169,6 +177,7 @@ body {
 .mt-2 {
     margin-top: 2rem;
 }
+
 .mb-2 {
     margin-bottom: 2rem;
 }
@@ -321,6 +330,21 @@ body {
 
     input {
         width: 100%;
+    }
+
+    input,
+    label {
+        @extend .box-sizing;
+    }
+}
+
+.card-form-group-dual {
+    display: flex;
+
+    .metade {
+        flex-basis: 50%;
+        width: 50%;
+        position: relative;
     }
 }
 
@@ -475,6 +499,7 @@ button,
 
 .btn-lg {
     padding: .725rem .265rem;
+    margin: .2rem 0;
     width: 100%;
     box-sizing: border-box;
 }
@@ -484,6 +509,7 @@ h2,
 h3,
 h4,
 h5 {
+    font-weight: normal;
     margin-block-end: .4rem;
     margin-block-start: .4rem;
 }
@@ -526,7 +552,7 @@ footer {
         z-index: 2;
         transition: height 0.4s ease;
 
-        #avisoRetracao{
+        #avisoRetracao {
             display: inline-block;
         }
 
@@ -543,7 +569,7 @@ footer {
                 display: none;
             }
 
-            #avisoRetracao{
+            #avisoRetracao {
                 display: none;
             }
 
@@ -562,7 +588,8 @@ footer {
                     top: 5px;
                     right: 0;
                 }
-                &#tema{
+
+                &#tema {
                     display: none;
                 }
             }

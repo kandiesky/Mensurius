@@ -24,7 +24,8 @@
     "vue-clipboard2": "^0.3.1",
     "vue-qr": "^2.2.1",
     "vue-router": "^3.2.0",
-    "vue-snotify": "^3.2.1"
+    "vue-snotify": "^3.2.1",
+    "vuejs-datepicker": "^1.6.2"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^2.34.0",

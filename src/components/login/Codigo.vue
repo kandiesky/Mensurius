@@ -27,10 +27,10 @@ export default Vue.extend({
         this.$snotify.warning("NENHUM CÓDIGO FOI DIGITADO!");
         return;
       }
-      if (localStorage.getItem(this.codigo) == "true") {
+      /* if (localStorage.getItem(this.codigo) == "true") {
         this.$snotify.error("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
         return;
-      }
+      } */
 
       this.$http({
         method: "GET",

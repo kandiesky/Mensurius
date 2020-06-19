@@ -15,10 +15,19 @@
         <br />
         Pergunta: {{ questionario.pergunta }}
         <br />
-        Link: {{ questionario.link }}
-        <br />
         Agradecimento: {{ questionario.agradecimento }}
       </h3>
+      <div v-if="questionario.link.length > 0" class="wrapper">
+        <h1>Links</h1>
+        <a
+          v-for="(link, index) in questionario.link"
+          :key="index"
+          :href="link.link"
+          target="_top"
+          class="btn mb-2 mt-2"
+          >{{ link.titulo }}</a
+        >
+      </div>
       <div v-if="questionario.midia.length > 0" class="wrapper">
         <img :src="questionario.midia" class="midia" />
       </div>
