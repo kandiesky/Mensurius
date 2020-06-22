@@ -9,6 +9,9 @@
   </transition-group>
 </template>
 <script lang="ts">
+let timeout = setTimeout(function() {
+  return;
+}, 1000);
 import Vue from "vue";
 import { AxiosError, AxiosResponse } from "axios";
 
@@ -26,6 +29,15 @@ export default Vue.extend({
     };
   },
   methods: {
+    autoUpdate() {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        if (this.estado.sessao.id) {
+          this.carregarQuestionarios();
+          this.autoUpdate();
+        }
+      }, 120000);
+    },
     carregarQuestionarios() {
       this.questionarios = {};
       this.$http({
@@ -67,6 +79,10 @@ export default Vue.extend({
     this.$root.$on("recarregar", () => {
       this.carregarQuestionarios();
     });
+    this.autoUpdate();
+  },
+  beforeDestroy() {
+    clearTimeout(timeout);
   }
 });
 </script>

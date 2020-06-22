@@ -11,7 +11,8 @@ import {
   faEllipsisV,
   faEdit,
   faInfo,
-  faCalendarCheck,
+  faCalendarTimes,
+  faCalendarPlus,
   faTrashAlt,
   faAngleDoubleLeft,
   faIdCardAlt,
@@ -41,7 +42,8 @@ library.add(
   faEllipsisV,
   faEdit,
   faInfo,
-  faCalendarCheck,
+  faCalendarPlus,
+  faCalendarTimes,
   faTrashAlt,
   faAngleDoubleLeft,
   faUserCheck,
@@ -71,7 +73,8 @@ Vue.use(Snotify, {
   toast: {
     timeout: 5000,
     position: SnotifyPosition.rightTop
-  }
+  },
+  preventDuplicates: true
 });
 
 //import vueQr from "vue-qr";

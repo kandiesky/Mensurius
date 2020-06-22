@@ -29,8 +29,12 @@
             <icon icon="info-circle" />
             <span>Informações</span>
           </router-link>
+          <li @click="alterarPrazo(questionario.codigo)">
+            <icon icon="calendar-plus" />
+            <span>Alterar Prazo</span>
+          </li>
           <li @click="fecharPrazo(questionario.codigo)">
-            <icon icon="calendar-check" />
+            <icon icon="calendar-times" />
             <span>Fechar Prazo</span>
           </li>
           <li @click="deletar(index, questionario.codigo)">
@@ -58,7 +62,7 @@
       <div v-if="questionario.midia.length > 0" class="wrapper">
         <img :src="questionario.midia" class="midia" />
       </div>
-      <h3 class="destaque">{{ questionario.pergunta }}</h3>
+      <h3>{{ questionario.pergunta }}</h3>
       <div class="flex container container-questionario">
         <div
           class="flex flex-column flex-center votos-questionario"
@@ -247,6 +251,70 @@ export default Vue.extend({
           placeholder: 'DIGITE "SIM" E CONFIRME PARA PROSSEGUIR'
         }
       );
+    },
+    alterarPrazo(codigo: string) {
+      (this.$snotify.prompt(
+        "DIGITE A DATA NOVA QUE DESEJA NO CALENDÁRIO OU NO FORMATO: DD/MM/AAAA. EX: 31/12/2020",
+        "ALTERAR PRAZO",
+        {
+          buttons: [
+            {
+              text: "CONFIRMAR",
+              action: (toast: SnotifyToast) => {
+                let resposta: string | string[] = toast.value;
+
+                if (resposta.indexOf("/") !== -1 && resposta !== "") {
+                  resposta = resposta.split("/");
+                  resposta = `${resposta[2]}-${resposta[1]}-${resposta[0]}`;
+                }
+
+                if (resposta !== "") {
+                  const formData = new FormData();
+                  formData.append("id", this.estado.sessao.id);
+                  formData.append("chave", this.estado.sessao.chave);
+                  formData.append("codigo", codigo);
+                  formData.append("data", resposta as string);
+
+                  this.$http({
+                    method: "POST",
+                    url: "/mensurius/api/alterar_prazo.questionario.php",
+                    data: formData
+                  })
+                    .then((response: AxiosResponse) => {
+                      if (response.data.resultado) {
+                        this.$snotify.remove(toast.id as string);
+                        this.$snotify.success("ALTERADO COM SUCESSO!");
+                        this.$root.$emit("recarregar");
+                      } else {
+                        this.$snotify.error(response.data.mensagem);
+                      }
+                    })
+                    .catch((reason: AxiosError) => {
+                      this.$snotify.error(`HOUVE UM ERRO: ${reason}`);
+                    });
+                } else {
+                  this.$snotify.error(
+                    `A AÇÃO FOI CANCELADA. A DATA "${resposta}" ESTAVA INCORRETA`
+                  );
+                  this.$snotify.remove(toast.id as string);
+                }
+              },
+              bold: true
+            },
+            {
+              text: "CANCELAR",
+              action: (toast: SnotifyToast) => {
+                this.$snotify.remove(toast.id as string);
+              }
+            }
+          ],
+          placeholder: ""
+        }
+      ) as any).on("mounted", (toast: SnotifyToast) => {
+        (document.getElementById(
+          toast.id.toString()
+        ) as HTMLInputElement).type = "date";
+      });
     }
   },
   components: {

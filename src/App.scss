@@ -14,7 +14,7 @@
     --icon: #0e96fd;
 
     .destaque {
-        color: #06d6a0;
+        color: #cb2c38;
     }
 }
 
@@ -187,6 +187,12 @@ body {
     height: auto;
     overflow: auto;
     text-align: center;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+        width: 5px;
+    }
 }
 
 .flex-column {
@@ -553,6 +559,7 @@ footer {
         transition: height 0.4s ease;
 
         #avisoRetracao {
+            text-indent: 5px;
             display: inline-block;
         }
 
@@ -578,6 +585,10 @@ footer {
                 margin-right: 1rem;
                 text-align: center;
                 display: inline-block;
+
+                &:not(#menu){
+                    display: none !important;
+                }
 
                 span {
                     display: none;

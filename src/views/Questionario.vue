@@ -11,7 +11,7 @@
       <div v-if="questionario.midia.length > 0">
         <img :src="questionario.midia" class="midia" />
       </div>
-      <h1 class="destaque" v-show="!this.votado">
+      <h1 v-show="!this.votado">
         {{ questionario.pergunta }}
       </h1>
       <small>Validade: {{ questionario.validade }}</small>

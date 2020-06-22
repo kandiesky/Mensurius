@@ -74,6 +74,10 @@
         ADICIONAR LINK ({{ tamanho(links) }}/5)
       </button>
       <div class="card-form-group mt-2">
+        <small
+          >SELECIONE NO CALENDÁRIO OU DIGITE A DATA NO FORMATO DD/MM/AAAA. Ex:
+          31/12/2020</small
+        >
         <input type="date" id="vencimento" v-model="vencimento" />
         <label for="vencimento" class="preenchido">DATA DE VENCIMENTO*</label>
       </div>
@@ -148,7 +152,7 @@ export default Vue.extend({
       pergunta: "",
       links: [] as any,
       agradecimento: "",
-      vencimento: "",
+      vencimento: "" as string | string[],
       respostas: [{ texto: "" }, { texto: "" }],
       midia: "",
       codigo: ""
@@ -212,13 +216,18 @@ export default Vue.extend({
         return;
       }
 
+      if (this.vencimento.indexOf("/") !== -1 && this.vencimento !== "") {
+        this.vencimento = (this.vencimento as string).split("/");
+        this.vencimento = `${this.vencimento[2]}-${this.vencimento[1]}-${this.vencimento[0]}`;
+      }
+
       const formData = new FormData();
       const inputMidia = this.$refs.midia as HTMLInputElement;
 
       formData.append("nome", this.nome);
       formData.append("codigo", this.codigo);
       formData.append("pergunta", this.pergunta);
-      formData.append("vencimento", this.vencimento);
+      formData.append("vencimento", this.vencimento as string);
       formData.append("respostas", JSON.stringify(this.respostas));
       formData.append("links", JSON.stringify(this.links));
       formData.append("agradecimento", this.agradecimento);

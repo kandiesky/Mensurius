@@ -10,12 +10,12 @@
     <div
       :class="['navbar', 'vertical-navbar', navbarRetraida ? 'retraida' : '']"
     >
-      <a @click="retrairNavbar()">
+      <a @click="retrairNavbar()" id="menu">
         <icon
           icon="angle-double-left"
           :transform="{ rotate: navbarRetraida ? 180 : 0 }"
         />
-        <span id="avisoRetracao">&nbsp; Encolher Menu</span>
+        <span id="avisoRetracao">&nbsp;&nbsp; Encolher Menu</span>
       </a>
       <a @click="mudarTema()" id="tema">
         <icon v-if="tema == 0" icon="sun" />
@@ -50,7 +50,7 @@
       </router-link>
       <router-link v-if="estado.sessao.id" to="/painel/criar" class="sub">
         <icon icon="plus-square" />
-        <span>&nbsp;Criar Questionário</span>
+        <span>&nbsp;Criar</span>
       </router-link>
       <a v-if="estado.sessao.id" id="sair" @click="sair()">
         <icon icon="sign-out-alt" />
