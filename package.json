@@ -65,12 +65,11 @@
     "rules": {}
   },
   "browserslist": [
-    "> 1%",
+    "IE 8",
     "last 2 versions",
     "not dead",
     "IE 10",
-    "IE_Mob 11",
-    "IE 9"
+    "IE_Mob 11"
   ],
   "gitHooks": {
     "pre-commit": "lint-staged"

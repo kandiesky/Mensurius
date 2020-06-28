@@ -95,7 +95,7 @@ export default Vue.extend({
           this.questionario = response.data.resposta;
           if (localStorage.getItem(this.questionario.codigo) == "true") {
             this.$snotify.info(
-              "VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO! VOLTE PARA A TELA INICIAL CASO QUEIRA VOTAR EM OUTRO."
+              "VOCÊ JÁ RESPONDEU ESTE QUESTIONÁRIO! VOLTE PARA A TELA INICIAL CASO QUEIRA RESPONDER OUTRO."
             );
             this.votado = true;
             //this.$router.push("/");
@@ -120,7 +120,7 @@ export default Vue.extend({
       }
 
       if (localStorage.getItem(this.questionario.codigo) == "true") {
-        this.$snotify.info("VOCÊ JÁ VOTOU NESTE QUESTIONÁRIO!");
+        this.$snotify.info("VOCÊ JÁ RESPONDEU ESTE QUESTIONÁRIO!");
         this.votado = true;
         //this.$router.push("/");
         return;
